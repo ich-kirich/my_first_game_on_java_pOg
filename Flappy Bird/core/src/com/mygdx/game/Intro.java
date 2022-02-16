@@ -15,12 +15,15 @@ public class Intro implements Screen{
 	OrthographicCamera camera;
 	Animation<TextureRegion> animation; // гифка
 	float elapsed;
+	private float timeSeconds = 0f;
+	Texture intro_final;
 	
 	public Intro(final Drop gam) {
 		this.game = gam;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 600);
-		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("W.gif").read()); // СДЕЛАЙ НОРМ ГИФКУ
+		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("intro.gif").read()); // гифка
+		intro_final = new Texture("intro_final.png"); // для последнего кадра
 	}
 	
 	@Override
@@ -34,8 +37,14 @@ public class Intro implements Screen{
 		camera.update();
 		ScreenUtils.clear(1, 1, 1, 1); // create background color
 		game.batch.begin(); // начало отрисовки
-		elapsed += Gdx.graphics.getDeltaTime();
-		game.batch.draw(animation.getKeyFrame(elapsed), 130, 50); // гифка 
+		elapsed += Gdx.graphics.getDeltaTime() + 0.01;
+		timeSeconds +=Gdx.graphics.getRawDeltaTime(); // для того, чтобы гифка один раз проиграла(идет счет секунд)
+		if(timeSeconds <= 6) { // ровно 6 секунд для одного проигрыша гифки
+			game.batch.draw(animation.getKeyFrame(elapsed), -75, -50); // гифка
+			}
+		else {
+			game.batch.draw(intro_final, -75, -50); // последний кадр, который бесконечно будет висеть
+		}
 		game.batch.end();
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {
 			game.setScreen(new MainMenuScreen(game));
