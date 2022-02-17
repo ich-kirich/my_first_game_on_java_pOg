@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,12 +17,16 @@ public class MainMenuScreen implements Screen{
 	final Drop game;
 	OrthographicCamera camera;
 	Texture bg_menu;
+	Music music_intro_fon, music_intro_fon2;
+	int random_choose_menu = (int)(Math.random() * ((2 - 1) + 1)) + 1; // рандомное число
 	
 	public MainMenuScreen(Drop gam) {
 		this.game = gam;
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 600);
 		bg_menu = new Texture("menu.png");
+		music_intro_fon = Gdx.audio.newMusic(Gdx.files.internal("intro_music.mp3")); // фоновая музыка
+		music_intro_fon2 = Gdx.audio.newMusic(Gdx.files.internal("intro_music2.mp3")); // фоновая музыка
 	}
 	
 
@@ -39,9 +44,23 @@ public class MainMenuScreen implements Screen{
 		game.batch.draw(bg_menu, 0, -100);
 		game.font.draw(game.batch, "PLAY", 100, 120);
 		game.font.draw(game.batch, "EXIT", 100, 70);
+		
+		switch(random_choose_menu) {
+		case 1:
+			music_intro_fon.play(); // здесь фоновая музыка запускается
+			break;
+		case 2:
+			music_intro_fon2.play(); // здесь фоновая музыка запускается
+			break;
+		default:
+			System.out.println("Что пошло не так с музыкой фоновой в меню......");
+		} // рандомное проигрывание фоновой музыки
+		
 		game.batch.end();
 		if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)){
 			if((90 < Gdx.input.getX() && Gdx.input.getX() <= 130) && (Gdx.input.getY() >= 350 && Gdx.input.getY() <= 370)) {
+				music_intro_fon.stop(); // прекращение проигрывания фоновой музыки
+				music_intro_fon2.stop(); // прекращение проигрывания фоновой музыки
 				game.setScreen(new MyGdxGame(game));
 				dispose();
 			}
