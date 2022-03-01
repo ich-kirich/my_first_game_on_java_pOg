@@ -27,7 +27,7 @@ public class Bird {
 	}
 	
 	public void update() {
-		if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+		if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && position.y < 0) { // position.y < 0  - чтоб после поражения не работало нажатие на space
 			vy = 5; // при нажати на пробел птичка прыгает выше
 			fly_stepan.play();
 		}

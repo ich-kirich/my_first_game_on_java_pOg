@@ -23,7 +23,7 @@ public class Obstacles {
 		public void update() {
 			position.x -= speed;
 			if(position.x < -50) {
-				position.x = 800;
+				position.x = 1080;
 				offset = new Random().nextInt(250);
 			}
 			emptySpace.y= position.y - offset + 300;
@@ -41,7 +41,7 @@ public class Obstacles {
 			int startPositionX = 400;
 			for(int i = 0; i < obs.length; i++) {            
 				obs[i] = new WallPair(new Vector2(startPositionX, 0));
-				startPositionX += 220;
+				startPositionX += 320;
 			}
 		}
 			
@@ -61,7 +61,7 @@ public class Obstacles {
 				int startPositionX = 400;
 				for(int i = 0; i < obs.length; i++) {            
 					obs[i] = new WallPair(new Vector2(startPositionX, 0));
-					startPositionX += 220;
+					startPositionX += 320;
 				}
 			}
 		}

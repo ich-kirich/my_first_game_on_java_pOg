@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import java.awt.Graphics;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,34 +9,49 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class MyGdxGame extends ApplicationAdapter implements Screen{
 	SpriteBatch batch;
 	Background bg;
-	Bird bird; // птичка
+	Bird bird; // РїС‚РёС‡РєР°
 	Obstacles obstacles;
 	boolean gameOver;
-	Texture restartTexture;
+	Texture restartTexture, to_menu;
 	BitmapFont Font_score;
 	BitmapFont Font_score_final;
 	int score;
 	int score_itogo;
-	boolean is_bird = true; // если птица отрисована
-	Animation<TextureRegion> animation; // гифка
+	boolean is_bird = true; // РµСЃР»Рё РїС‚РёС†Р° РѕС‚СЂРёСЃРѕРІР°РЅР°
+	Animation<TextureRegion> animation; // РіРёС„РєР°
 	float elapsed;
 	final Drop game;
-	Music music_fon1, music_fon2, music_fon3, music_fon4, music_fon5, music_fon6, music_fon7, music_game_over; // сами песенки
-	int random_choose_maingame = 6; // рандомное число
-	boolean isPlaying1, isPlaying2, isPlaying3, isPlaying4, isPlaying5, isPlaying6, isPlaying7; // проверка воспроизводится ли музыка
-	private float timeSeconds = 0f; // таймер, чтоб проигрывало ровно один раз музыку и меняло на другую
-	boolean in_menu = false; // если произошел переход в меню
-	
+	Music music_fon1, music_fon2, music_fon3, music_fon4, music_fon5, music_fon6, music_fon7, music_game_over; // СЃР°РјРё РїРµСЃРµРЅРєРё
+	int random_choose_maingame = 6; // СЂР°РЅРґРѕРјРЅРѕРµ С‡РёСЃР»Рѕ
+	boolean isPlaying1, isPlaying2, isPlaying3, isPlaying4, isPlaying5, isPlaying6, isPlaying7; // РїСЂРѕРІРµСЂРєР° РІРѕСЃРїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ Р»Рё РјСѓР·С‹РєР°
+	private float timeSeconds = 0f; // С‚Р°Р№РјРµСЂ, С‡С‚РѕР± РїСЂРѕРёРіСЂС‹РІР°Р»Рѕ СЂРѕРІРЅРѕ РѕРґРёРЅ СЂР°Р· РјСѓР·С‹РєСѓ Рё РјРµРЅСЏР»Рѕ РЅР° РґСЂСѓРіСѓСЋ
+	boolean in_menu = false; // РµСЃР»Рё РїСЂРѕРёР·РѕС€РµР» РїРµСЂРµС…РѕРґ РІ РјРµРЅСЋ
+	private Texture myTexture;
+    private TextureRegion myTextureRegion;
+    private TextureRegionDrawable myTexRegionDrawable;
+    private ImageButton button;
+    private Stage stage;
+    private OrthographicCamera camera;
 	
 	public MyGdxGame (final Drop gam) {
 		this.game = gam;
@@ -47,7 +64,8 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		Font_score = new BitmapFont();
 		Font_score_final = new BitmapFont();
 		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("W.gif").read()); // GIF
-		music_fon1 = Gdx.audio.newMusic(Gdx.files.internal("music_fon1.mp3")); // фоновая музыка
+		
+		music_fon1 = Gdx.audio.newMusic(Gdx.files.internal("music_fon1.mp3")); // С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР°
 		music_fon2 = Gdx.audio.newMusic(Gdx.files.internal("music_fon2.mp3"));
 		music_fon3 = Gdx.audio.newMusic(Gdx.files.internal("music_fon3.mp3"));
 		music_fon4 = Gdx.audio.newMusic(Gdx.files.internal("music_fon4.mp3"));
@@ -55,40 +73,68 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		music_fon6 = Gdx.audio.newMusic(Gdx.files.internal("music_fon6.mp3"));
 		music_fon7 = Gdx.audio.newMusic(Gdx.files.internal("music_fon7.mp3"));
 		music_game_over = Gdx.audio.newMusic(Gdx.files.internal("music_game_over.mp3"));
-
+		
+		myTexture = new Texture(Gdx.files.internal("main_game_go_menu.png")); // СЃРѕР·РґР°РЅРёРµ РєРЅРѕРїРєРё РІС‹С…РѕРґР° РІ РјРµРЅСЋ
+	    myTextureRegion = new TextureRegion(myTexture);
+	    myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
+	    button = new ImageButton(myTexRegionDrawable); //Set the button up
+	    button.setPosition(0, 1050);
+	    stage = new Stage(new ScreenViewport());
+		stage.addActor(button);
+		Gdx.input.setInputProcessor(stage);
+		button.addListener(new InputListener(){
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	gameOver = true;
+    			in_menu = true;
+    			music_fon1.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+    			music_fon2.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+    			music_fon3.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+    			music_fon4.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+    			music_fon5.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+    			music_fon6.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+    			music_fon7.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+    			music_game_over.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° РјСѓР·С‹РєРё game_over
+    			game.setScreen(new MainMenuScreen(game));
+                return true;
+            }
+        }); // РЅР°Р¶Р°С‚РёРµ РЅР° РєРЅРѕРїРєСѓ РІС‹С…РѕРґР° РІ РјРµРЅСЋ
+		
+		camera = new OrthographicCamera(1920, 1080); // СѓСЃС‚Р°РЅРѕРІРєР° РЅР° hd (РґР»СЏ РїРѕСЃР»РµРґСѓСЋС‰РµРіРѕ РјР°СЃС€С‚Р°Р±РёСЂРѕРІР°РЅРёСЏ)
 	}
 
 	@Override
 	public void render (float delta) {
+		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		update();
-		ScreenUtils.clear(1, 1, 1, 1); // create background color
-		batch.begin(); // начало отрисовки
-		
-		bg.render(batch); // отрисовка картинки
+		ScreenUtils.clear(1, 1, 1 , 1); // create background color
+		batch.setProjectionMatrix(camera.combined);
+		batch.begin(); // РЅР°С‡Р°Р»Рѕ РѕС‚СЂРёСЃРѕРІРєРё
+		bg.render(batch); // РѕС‚СЂРёСЃРѕРІРєР° РєР°СЂС‚РёРЅРєРё
 		obstacles.render(batch);
 		Font_score.setColor(Color.WHITE);
 		Font_score_final.setColor(Color.WHITE);
 		
 		if(!gameOver) {
 			bird.render(batch);
-			Font_score.draw(batch, "SCORE:" + (score / 16), 10, 20); // вывод промежуточного
+			Font_score.draw(batch, "SCORE:" + (score / 16), 10, 20); // РІС‹РІРѕРґ РїСЂРѕРјРµР¶СѓС‚РѕС‡РЅРѕРіРѕ
 			
 			if(random_choose_maingame == 1) {
-				music_fon1.play(); // здесь фоновая музыка запускается
+				music_fon1.play(); // Р·РґРµСЃСЊ С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
 				isPlaying1 = music_fon1.isPlaying();
-				timeSeconds +=Gdx.graphics.getRawDeltaTime(); // запуск таймера
+				timeSeconds +=Gdx.graphics.getRawDeltaTime(); // Р·Р°РїСѓСЃРє С‚Р°Р№РјРµСЂР°
 				if(timeSeconds > 575) {
 					music_fon1.stop();
 					isPlaying1 = false;
-				} // остановка песни
+				} // РѕСЃС‚Р°РЅРѕРІРєР° РїРµСЃРЅРё
 				if(!isPlaying1) {
 					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
 					timeSeconds = 0;
-				}// выбор рандомной песни
+				}// РІС‹Р±РѕСЂ СЂР°РЅРґРѕРјРЅРѕР№ РїРµСЃРЅРё
 
 			}
 			else if(random_choose_maingame == 2) {
-				music_fon2.play(); // здесь фоновая музыка запускается
+				music_fon2.play(); // Р·РґРµСЃСЊ С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
 				isPlaying2 = music_fon2.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 548) {
@@ -101,7 +147,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random_choose_maingame == 3) {
-				music_fon3.play(); // здесь фоновая музыка запускается
+				music_fon3.play(); // Р·РґРµСЃСЊ С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
 				isPlaying3 = music_fon3.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 747) {
@@ -114,7 +160,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random_choose_maingame == 4) {
-				music_fon4.play(); // здесь фоновая музыка запускается
+				music_fon4.play(); // Р·РґРµСЃСЊ С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
 				isPlaying4 = music_fon4.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 600) {
@@ -127,7 +173,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random_choose_maingame == 5) {
-				music_fon5.play(); // здесь фоновая музыка запускается
+				music_fon5.play(); // Р·РґРµСЃСЊ С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
 				isPlaying5 = music_fon5.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 415) {
@@ -140,7 +186,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random_choose_maingame == 6) {
-				music_fon6.play(); // здесь фоновая музыка запускается
+				music_fon6.play(); // Р·РґРµСЃСЊ С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
 				isPlaying6 = music_fon6.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 365) {
@@ -153,7 +199,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random_choose_maingame == 7) {
-				music_fon7.play(); // здесь фоновая музыка запускается
+				music_fon7.play(); // Р·РґРµСЃСЊ С„РѕРЅРѕРІР°СЏ РјСѓР·С‹РєР° Р·Р°РїСѓСЃРєР°РµС‚СЃСЏ
 				isPlaying7 = music_fon7.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 385) {
@@ -164,28 +210,32 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
 					timeSeconds = 0;
 				}
-			}
-			
-		}
+			} 
+			 
+		} // РїРѕРєР° РЅРµ РїСЂРѕРёРіСЂР°Р»Рё
 		else {
-			batch.draw(restartTexture, 130, 150);
-			Font_score_final.getData().setScale(3, 2); // размер шрифта
-			Font_score_final.draw(batch, "FINAL RESULT:" + (score_itogo / 16), 160, 380); // вывод итогового результата
+			bird.position.y = -100; // РїРµСЂРµРјРµС‰Р°РЅРёРµ РїС‚РёС†С‹ Р·Р° СЌРєСЂР°РЅ, С‡С‚РѕР± РїСЂРё РїРѕСЂР°Р¶РµРЅРёРё РЅР°Р¶Р°С‚РёРµ РЅР° space РЅРµ СЂР°Р±РѕС‚Р°Р»Рѕ
+			batch.draw(restartTexture, 320, 190);
+			Font_score_final.getData().setScale(3, 2); // СЂР°Р·РјРµСЂ С€СЂРёС„С‚Р°
+			Font_score_final.draw(batch, "FINAL RESULT:" + (score_itogo / 16), 350, 420); // РІС‹РІРѕРґ РёС‚РѕРіРѕРІРѕРіРѕ СЂРµР·СѓР»СЊС‚Р°С‚Р°
 			elapsed += Gdx.graphics.getDeltaTime();
-		    batch.draw(animation.getKeyFrame(elapsed), 130, 50); // гифка 
+		    batch.draw(animation.getKeyFrame(elapsed), 320, 90); // РіРёС„РєР° 
 			is_bird = false;
 			if(gameOver && !in_menu) {
 				music_game_over.play();
 			}
-			music_fon1.stop(); // остановка фоновой музыки
-			music_fon2.stop(); // остановка фоновой музыки
-			music_fon3.stop(); // остановка фоновой музыки
-			music_fon4.stop(); // остановка фоновой музыки
-			music_fon5.stop(); // остановка фоновой музыки
-			music_fon6.stop(); // остановка фоновой музыки
-			music_fon7.stop(); // остановка фоновой музыки
-		}
+			music_fon1.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon2.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon3.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon4.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon5.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon6.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon7.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+		} // РІ СЃР»СѓС‡Р°Рµ РїРѕСЂР°Р¶РµРЅРёСЏ
 		batch.end();
+		
+		stage.act(Gdx.graphics.getDeltaTime()); // РѕС‚СЂРёСЃРѕРІРєР° РєРЅРѕРїРєРё
+        stage.draw();
 	}
 	
 	public void update() {
@@ -193,34 +243,34 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		obstacles.update();
 		bird.update();
 		for(int i = 0; i < Obstacles.obs.length; i++) {
-			if(bird.position.x > Obstacles.obs[i].position.x && bird.position.x < Obstacles.obs[i].position.x + 50 && is_bird == true) { // чтоб считало очки пока птица отрисована
-				score += 1; // подсчет очков
+			if(bird.position.x > Obstacles.obs[i].position.x && bird.position.x < Obstacles.obs[i].position.x + 50 && is_bird == true) { // С‡С‚РѕР± СЃС‡РёС‚Р°Р»Рѕ РѕС‡РєРё РїРѕРєР° РїС‚РёС†Р° РѕС‚СЂРёСЃРѕРІР°РЅР°
+				score += 1; // РїРѕРґСЃС‡РµС‚ РѕС‡РєРѕРІ
 				if(!Obstacles.obs[i].emptySpace.contains(bird.position)) {
 					gameOver = true;
-					score_itogo = score; // итоговый результат
+					score_itogo = score; // РёС‚РѕРіРѕРІС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚
 				}
 			}
-		} // если врежется в трубу
-		if(bird.position.y < 0 || bird.position.y > 466) {
+		} // РµСЃР»Рё РІСЂРµР¶РµС‚СЃСЏ РІ С‚СЂСѓР±Сѓ
+		if(bird.position.y < 0 || bird.position.y > 580) {
 			gameOver = true;
-			score_itogo = score; // итоговый результат
-		} // если вылетает за экран
+			score_itogo = score; // РёС‚РѕРіРѕРІС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚
+		} // РµСЃР»Рё РІС‹Р»РµС‚Р°РµС‚ Р·Р° СЌРєСЂР°РЅ
 		if(Gdx.input.isKeyPressed(Input.Keys.W) && gameOver) {
 			recreate();
-		}// рестарт
+		}// СЂРµСЃС‚Р°СЂС‚
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 			gameOver = true;
 			in_menu = true;
-			music_fon1.stop(); // остановка фоновой музыки
-			music_fon2.stop(); // остановка фоновой музыки
-			music_fon3.stop(); // остановка фоновой музыки
-			music_fon4.stop(); // остановка фоновой музыки
-			music_fon5.stop(); // остановка фоновой музыки
-			music_fon6.stop(); // остановка фоновой музыки
-			music_fon7.stop(); // остановка фоновой музыки
-			music_game_over.stop(); // остановка музыки game_over
+			music_fon1.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon2.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon3.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon4.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon5.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon6.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_fon7.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° С„РѕРЅРѕРІРѕР№ РјСѓР·С‹РєРё
+			music_game_over.stop(); // РѕСЃС‚Р°РЅРѕРІРєР° РјСѓР·С‹РєРё game_over
 			game.setScreen(new MainMenuScreen(game));
-		}// Выход в меню
+		}// Р’С‹С…РѕРґ РІ РјРµРЅСЋ
 	}
 	
 	@Override
@@ -235,14 +285,13 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		score = 0;
 		is_bird = true;
 		music_game_over.stop();
-		random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1; // рандомное число
+		random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1; // СЂР°РЅРґРѕРјРЅРѕРµ С‡РёСЃР»Рѕ
 
 	}
 
 	@Override
 	public void show() {
 		// TODO Auto-generated method stub
-		
 	}
 
 
@@ -251,5 +300,8 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		// TODO Auto-generated method stub
 		
 	}
-	
+	@Override
+	public void resize(int width, int height){
+		camera.setToOrtho(false, 1080, 600); // РјР°СЃС€С‚Р°Р±РёСЂРѕР°РІРЅРёРµ СЌРєСЂР°РЅР°
+	}
 }
