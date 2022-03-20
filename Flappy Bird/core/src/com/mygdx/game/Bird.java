@@ -18,8 +18,8 @@ public class Bird {
 		img = new Texture("bird2.png");
 		position = new Vector2(100, 380);
 		vy = 0;
-		gravity = -0.7f; // гравитация
-		fly_stepan = Gdx.audio.newMusic(Gdx.files.internal("fly_stepan1.mp3")); // при полете степана
+		gravity = -0.7f; // ГЈГ°Г ГўГЁГІГ Г¶ГЁГї
+		fly_stepan = Gdx.audio.newMusic(Gdx.files.internal("fly_stepan1.mp3")); // ГЇГ°ГЁ ГЇГ®Г«ГҐГІГҐ Г±ГІГҐГЇГ Г­Г 
 	}
 	
 	public void render(SpriteBatch batch) {
@@ -27,8 +27,13 @@ public class Bird {
 	}
 	
 	public void update() {
+<<<<<<< HEAD
 		if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && position.y > 0) { // position.y > 0  - чтоб после поражения не работало нажатие на space
 			vy = 5; // при нажати на пробел птичка прыгает выше
+=======
+		if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && position.y > 0) { // position.y < 0  - Г·ГІГ®ГЎ ГЇГ®Г±Г«ГҐ ГЇГ®Г°Г Г¦ГҐГ­ГЁГї Г­ГҐ Г°Г ГЎГ®ГІГ Г«Г® Г­Г Г¦Г ГІГЁГҐ Г­Г  space
+			vy = 5; // ГЇГ°ГЁ Г­Г Г¦Г ГІГЁ Г­Г  ГЇГ°Г®ГЎГҐГ« ГЇГІГЁГ·ГЄГ  ГЇГ°Г»ГЈГ ГҐГІ ГўГ»ГёГҐ
+>>>>>>> 449b3d7da87d7056624c983323762156e1e1943a
 			fly_stepan.play();
 		}
 		else {
