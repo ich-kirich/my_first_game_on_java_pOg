@@ -64,6 +64,8 @@ public class MainMenuScreen implements Screen{
             	music_intro_fon.stop(); // прекращение проигрывания фоновой музыки
     			music_intro_fon2.stop(); // прекращение проигрывания фоновой музыки
     			game.setScreen(new MyGdxGame(game));
+    			Background.new_fon = true; // чтоб с фоном не баговало
+    			Background.promezh_fon = true; // чтоб с фоном не баговало
     			dispose();
                 return true;
             }

@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import java.awt.Graphics;
+import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -35,14 +36,13 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 	Texture restartTexture, to_menu;
 	BitmapFont Font_score;
 	BitmapFont Font_score_final;
-	int score;
-	int score_itogo;
+	static int score;
+	static int score_itogo;
 	boolean is_bird = true; // если птица отрисована
 	Animation<TextureRegion> animation; // гифка
 	float elapsed;
 	final Drop game;
 	Music music_fon1, music_fon2, music_fon3, music_fon4, music_fon5, music_fon6, music_fon7, music_game_over; // сами песенки
-	int random_choose_maingame = 6; // рандомное число
 	boolean isPlaying1, isPlaying2, isPlaying3, isPlaying4, isPlaying5, isPlaying6, isPlaying7; // проверка воспроизводится ли музыка
 	private float timeSeconds = 0f; // таймер, чтоб проигрывало ровно один раз музыку и меняло на другую
 	boolean in_menu = false; // если произошел переход в меню
@@ -52,6 +52,8 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
     private ImageButton button;
     private Stage stage;
     private OrthographicCamera camera;
+    Random random_choose_maingame = new Random(); // рандомное число
+    int random;
 	
 	public MyGdxGame (final Drop gam) {
 		this.game = gam;
@@ -64,6 +66,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		Font_score = new BitmapFont();
 		Font_score_final = new BitmapFont();
 		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("W.gif").read()); // GIF
+		random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 		
 		music_fon1 = Gdx.audio.newMusic(Gdx.files.internal("music_fon1.mp3")); // фоновая музыка
 		music_fon2 = Gdx.audio.newMusic(Gdx.files.internal("music_fon2.mp3"));
@@ -95,6 +98,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
     			music_fon6.stop(); // остановка фоновой музыки
     			music_fon7.stop(); // остановка фоновой музыки
     			music_game_over.stop(); // остановка музыки game_over
+    			recreate();
     			game.setScreen(new MainMenuScreen(game));
                 return true;
             }
@@ -119,7 +123,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 			bird.render(batch);
 			Font_score.draw(batch, "SCORE:" + (score / 16), 10, 20); // вывод промежуточного
 			
-			if(random_choose_maingame == 1) {
+			if(random == 1) {
 				music_fon1.play(); // здесь фоновая музыка запускается
 				isPlaying1 = music_fon1.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime(); // запуск таймера
@@ -128,12 +132,12 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					isPlaying1 = false;
 				} // остановка песни
 				if(!isPlaying1) {
-					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}// выбор рандомной песни
 
 			}
-			else if(random_choose_maingame == 2) {
+			else if(random == 2) {
 				music_fon2.play(); // здесь фоновая музыка запускается
 				isPlaying2 = music_fon2.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
@@ -142,11 +146,11 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					isPlaying2 = false;
 				}
 				if(!isPlaying2) {
-					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}
 			}
-			else if(random_choose_maingame == 3) {
+			else if(random == 3) {
 				music_fon3.play(); // здесь фоновая музыка запускается
 				isPlaying3 = music_fon3.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
@@ -155,11 +159,11 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					isPlaying3 = false;
 				}
 				if(!isPlaying3) {
-					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}
 			}
-			else if(random_choose_maingame == 4) {
+			else if(random == 4) {
 				music_fon4.play(); // здесь фоновая музыка запускается
 				isPlaying4 = music_fon4.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
@@ -168,11 +172,11 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					isPlaying4 = false;
 				}
 				if(!isPlaying4) {
-					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}
 			}
-			else if(random_choose_maingame == 5) {
+			else if(random == 5) {
 				music_fon5.play(); // здесь фоновая музыка запускается
 				isPlaying5 = music_fon5.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
@@ -181,11 +185,11 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					isPlaying5 = false;
 				}
 				if(!isPlaying5) {
-					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}
 			}
-			else if(random_choose_maingame == 6) {
+			else if(random == 6) {
 				music_fon6.play(); // здесь фоновая музыка запускается
 				isPlaying6 = music_fon6.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
@@ -194,11 +198,11 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					isPlaying6 = false;
 				}
 				if(!isPlaying6) {
-					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}
 			}
-			else if(random_choose_maingame == 7) {
+			else if(random == 7) {
 				music_fon7.play(); // здесь фоновая музыка запускается
 				isPlaying7 = music_fon7.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
@@ -207,7 +211,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					isPlaying7 = false;
 				}
 				if(!isPlaying7) {
-					random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1;
+					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}
 			} 
@@ -261,6 +265,10 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 			gameOver = true;
 			in_menu = true;
+			score = 0;
+			score_itogo = 0;
+			Background.new_fon = true; // чтоб с фоном не баговало
+			Background.promezh_fon = true; // чтоб с фоном не баговало
 			music_fon1.stop(); // остановка фоновой музыки
 			music_fon2.stop(); // остановка фоновой музыки
 			music_fon3.stop(); // остановка фоновой музыки
@@ -269,6 +277,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 			music_fon6.stop(); // остановка фоновой музыки
 			music_fon7.stop(); // остановка фоновой музыки
 			music_game_over.stop(); // остановка музыки game_over
+			dispose();
 			game.setScreen(new MainMenuScreen(game));
 		}// Выход в меню
 	}
@@ -283,9 +292,12 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		bird.recreate();
 		gameOver = false;
 		score = 0;
+		score_itogo = 0;
 		is_bird = true;
 		music_game_over.stop();
-		random_choose_maingame = (int)(Math.random() * ((7 - 1) + 1)) + 1; // рандомное число
+		random = random_choose_maingame.nextInt((7 - 1) + 1) + 1; // рандомное число
+		Background.new_fon = true; // чтоб с фоном не баговало
+		Background.promezh_fon = true; // чтоб с фоном не баговало
 
 	}
 
