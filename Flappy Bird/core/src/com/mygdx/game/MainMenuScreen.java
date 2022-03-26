@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class MainMenuScreen implements Screen{
 	
 	final Drop game;
-	OrthographicCamera camera;
+	private OrthographicCamera camera;
 	Texture bg_menu;
 	Music music_intro_fon, music_intro_fon2;
 	int random_choose_menu = (int)(Math.random() * ((2 - 1) + 1)) + 1; // рандомное число
@@ -41,6 +41,7 @@ public class MainMenuScreen implements Screen{
 		bg_menu = new Texture("menu.png");
 		music_intro_fon = Gdx.audio.newMusic(Gdx.files.internal("intro_music.mp3")); // фоновая музыка
 		music_intro_fon2 = Gdx.audio.newMusic(Gdx.files.internal("intro_music2.mp3")); // фоновая музыка
+		camera = new OrthographicCamera(1920, 1080); // установка на hd (для последующего масштабирования)
 		
 		myTexture = new Texture(Gdx.files.internal("button_play.png"));
 		myTexture1 = new Texture(Gdx.files.internal("button_exit.png"));
@@ -77,7 +78,7 @@ public class MainMenuScreen implements Screen{
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             	music_intro_fon.stop(); // прекращение проигрывания фоновой музыки
     			music_intro_fon2.stop(); // прекращение проигрывания фоновой музыки
-            	Gdx.app.exit();
+    			game.setScreen(new ExitMenu(game));
             	dispose();
                 return true;
             }
@@ -94,6 +95,7 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void render(float delta) {
 		ScreenUtils.clear(1, 1, 1, 1); // create background color
+		//game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin(); // начало отрисовки
 		game.batch.draw(bg_menu, 0, -100);
 		switch(random_choose_menu) {
@@ -115,7 +117,7 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		
+		camera.setToOrtho(false, 1080, 600); // масштабироавние экрана
 	}
 
 	@Override
