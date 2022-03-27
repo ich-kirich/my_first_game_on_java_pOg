@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Null;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -28,6 +29,7 @@ public class MainMenuScreen implements Screen{
 	final Drop game;
 	private OrthographicCamera camera;
 	Texture bg_menu;
+	private Texture arrow_left, arrow_right;
 	Music music_intro_fon, music_intro_fon2;
 	int random_choose_menu = (int)(Math.random() * ((2 - 1) + 1)) + 1; // рандомное число
     private Texture myTexture, myTexture1;
@@ -35,6 +37,7 @@ public class MainMenuScreen implements Screen{
     private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1;
     protected ImageButton button, button1;
     protected Stage stage;
+    private boolean is_mouse_play = false, is_mouse_exit = false;
 	
 	public MainMenuScreen(Drop gam) {
 		this.game = gam;
@@ -42,6 +45,8 @@ public class MainMenuScreen implements Screen{
 		music_intro_fon = Gdx.audio.newMusic(Gdx.files.internal("intro_music.mp3")); // фоновая музыка
 		music_intro_fon2 = Gdx.audio.newMusic(Gdx.files.internal("intro_music2.mp3")); // фоновая музыка
 		camera = new OrthographicCamera(1920, 1080); // установка на hd (для последующего масштабирования)
+		arrow_left = new Texture("arrow_left.png");
+		arrow_right = new Texture("arrow_right.png");
 		
 		myTexture = new Texture(Gdx.files.internal("button_play.png"));
 		myTexture1 = new Texture(Gdx.files.internal("button_exit.png"));
@@ -70,6 +75,15 @@ public class MainMenuScreen implements Screen{
     			dispose();
                 return true;
             }
+            
+            public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
+            	is_mouse_play = true;
+            } // если курсор наведен
+            
+            public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
+            	is_mouse_play = false;
+            } // если не наведен курсор
+            
         }); //  нажатие на кнопку play
 		
 		Gdx.input.setInputProcessor(stage);
@@ -82,6 +96,14 @@ public class MainMenuScreen implements Screen{
             	dispose();
                 return true;
             }
+            
+            public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
+            	is_mouse_exit = true;
+            } // если курсор наведен
+            
+            public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
+            	is_mouse_exit = false;
+            } // если не наведен курсор
         }); // нажатие на кнопку exit
 	}
 	
@@ -98,6 +120,16 @@ public class MainMenuScreen implements Screen{
 		//game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin(); // начало отрисовки
 		game.batch.draw(bg_menu, 0, -100);
+		
+		if(is_mouse_exit) {
+			game.batch.draw(arrow_right, 170, 79, 10, 12);
+			game.batch.draw(arrow_left, 118, 79, 10, 12);
+		}// если курсор наведен
+		if(is_mouse_play) {
+			game.batch.draw(arrow_right, 170, 110, 10, 12);
+			game.batch.draw(arrow_left, 118, 110, 10, 12);
+		} // если курсор наведен
+		
 		switch(random_choose_menu) {
 		case 1:
 			music_intro_fon.play(); // здесь фоновая музыка запускается

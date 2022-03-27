@@ -19,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class ExitMenu implements Screen{
 
-	private Texture back, billy_sad, billy_happy, no, yes;
+	private Texture back, billy_sad, billy_happy, no, yes, arrow_left, arrow_right;
 	final Drop game;
 	private TextureRegion myTextureRegion, myTextureRegion1;
     private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1;
@@ -31,6 +31,8 @@ public class ExitMenu implements Screen{
 	public ExitMenu(Drop gam) {
 		this.game = gam;
 		back = new Texture("menu_exit.png");
+		arrow_left = new Texture("arrow_left.png");
+		arrow_right = new Texture("arrow_right.png");
 		billy_sad = new Texture("menu_exit_billy_sad.png");
 		billy_happy = new Texture("menu_exit_billy_happy.png");
 		camera = new OrthographicCamera(1920, 1080); // установка на hd (для последующего масштабирования)
@@ -65,7 +67,7 @@ public class ExitMenu implements Screen{
             
             public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
             	is_mouse_yes = false;
-            }
+            } // если не наведен курсор
         }); //  нажатие на кнопку YES
 		
 		Gdx.input.setInputProcessor(stage);
@@ -108,9 +110,13 @@ public class ExitMenu implements Screen{
 		game.batch.draw(back, -90, -60);
 		if(is_mouse_no) {
 			game.batch.draw(billy_happy, 250, 250);
+			game.batch.draw(arrow_left, 431, 110);
+			game.batch.draw(arrow_right, 500, 110);
 		}
 		if(is_mouse_yes) {
 			game.batch.draw(billy_sad, 250, 250);
+			game.batch.draw(arrow_left, 110, 110);
+			game.batch.draw(arrow_right, 178, 110);
 		}
 		game.batch.end();
 		stage.act(Gdx.graphics.getDeltaTime()); // отрисовка кнопок
