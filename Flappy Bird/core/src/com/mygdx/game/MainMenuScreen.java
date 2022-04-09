@@ -32,14 +32,15 @@ public class MainMenuScreen implements Screen{
 	private Texture arrow_left, arrow_right;
 	Music music_intro_fon, music_intro_fon2;
 	int random_choose_menu = (int)(Math.random() * ((2 - 1) + 1)) + 1; // рандомное число
-    private Texture myTexture, myTexture1;
-    private TextureRegion myTextureRegion, myTextureRegion1;
-    private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1;
-    protected ImageButton button, button1;
+    private Texture myTexture, myTexture1, myTexture2;
+    private TextureRegion myTextureRegion, myTextureRegion1, myTextureRegion2;
+    private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1, myTexRegionDrawable2;
+    protected ImageButton button, button1, button_to_skins;
     protected Stage stage;
-    private boolean is_mouse_play = false, is_mouse_exit = false;
+    private boolean is_mouse_play = false, is_mouse_exit = false, is_mouse_skins = false;
 	
 	public MainMenuScreen(Drop gam) {
+		Gdx.graphics.setVSync(true); // вертикальная синхронизация
 		this.game = gam;
 		bg_menu = new Texture("menu.png");
 		music_intro_fon = Gdx.audio.newMusic(Gdx.files.internal("intro_music.mp3")); // фоновая музыка
@@ -53,15 +54,22 @@ public class MainMenuScreen implements Screen{
 	    myTextureRegion = new TextureRegion(myTexture);
 	    myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 	    button = new ImageButton(myTexRegionDrawable); //Set the button up
-	    button.setPosition(400, 250);
+	    button.setPosition(400, 270);
 	    stage = new Stage(new ScreenViewport());
 		stage.addActor(button); // кнопка play
 		
 		myTextureRegion1 = new TextureRegion(myTexture1);
 	    myTexRegionDrawable1 = new TextureRegionDrawable(myTextureRegion1);
 		button1 = new ImageButton(myTexRegionDrawable1);
-		button1.setPosition(400, 180);
+		button1.setPosition(400, 160);
 		stage.addActor(button1); // // кнопка exit
+		
+		myTexture2 = new Texture(Gdx.files.internal("button_to_skins_menu.png"));
+		myTextureRegion2 = new TextureRegion(myTexture2);
+	    myTexRegionDrawable2 = new TextureRegionDrawable(myTextureRegion2);
+	    button_to_skins = new ImageButton(myTexRegionDrawable2);
+		button_to_skins.setPosition(400, 215);
+		stage.addActor(button_to_skins); // // кнопка skins
 		
 		Gdx.input.setInputProcessor(stage); // начало принятие нажатия на кнопки
 		button.addListener(new InputListener(){
@@ -105,6 +113,26 @@ public class MainMenuScreen implements Screen{
             	is_mouse_exit = false;
             } // если не наведен курсор
         }); // нажатие на кнопку exit
+	    
+	    Gdx.input.setInputProcessor(stage);
+	    button_to_skins.addListener(new InputListener(){
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	music_intro_fon.stop(); // прекращение проигрывания фоновой музыки
+    			music_intro_fon2.stop(); // прекращение проигрывания фоновой музыки
+    			game.setScreen(new skins_menu(game));
+            	dispose();
+                return true;
+            }
+            
+            public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
+            	is_mouse_skins = true;
+            } // если курсор наведен
+            
+            public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
+            	is_mouse_skins = false;
+            } // если не наведен курсор
+        }); // нажатие на кнопку skins
 	}
 	
 
@@ -122,13 +150,17 @@ public class MainMenuScreen implements Screen{
 		game.batch.draw(bg_menu, 0, -100);
 		
 		if(is_mouse_exit) {
-			game.batch.draw(arrow_right, 170, 79, 10, 12);
-			game.batch.draw(arrow_left, 118, 79, 10, 12);
-		}// если курсор наведен
+			game.batch.draw(arrow_right, 170, 70, 10, 12);
+			game.batch.draw(arrow_left, 118, 70, 10, 12);
+		}// если курсор наведен на кнопку exit
 		if(is_mouse_play) {
-			game.batch.draw(arrow_right, 170, 110, 10, 12);
-			game.batch.draw(arrow_left, 118, 110, 10, 12);
-		} // если курсор наведен
+			game.batch.draw(arrow_right, 170, 119, 10, 12);
+			game.batch.draw(arrow_left, 118, 119, 10, 12);
+		} // если курсор наведен на кнопку play
+		if(is_mouse_skins) {
+			game.batch.draw(arrow_right, 170, 95, 10, 12);
+			game.batch.draw(arrow_left, 118, 95, 10, 12);
+		} // если курсор наведен на кнопку skins
 		
 		switch(random_choose_menu) {
 		case 1:
@@ -173,7 +205,8 @@ public class MainMenuScreen implements Screen{
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+		music_intro_fon.dispose();
+		music_intro_fon2.dispose();
 	}
 
 }

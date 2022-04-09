@@ -8,18 +8,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bird {
-	Texture img;
+	static Texture img;
 	static Vector2 position;
 	float vy;
 	float gravity;
-	Music fly_stepan;
-	
+	static Music fly;
 	public Bird() {
-		img = new Texture("bird2.png");
+		if(!skins_menu.is_choose_skin) {
+			img = new Texture("skin_default.png");
+			fly = Gdx.audio.newMusic(Gdx.files.internal("fly_default.mp3")); // при полете звук
+		} // если скин не выбран
 		position = new Vector2(100, 380);
 		vy = 0;
 		gravity = -0.7f; // гравитация
-		fly_stepan = Gdx.audio.newMusic(Gdx.files.internal("fly_stepan1.mp3")); // при полете степана
 	}
 	
 	public void render(SpriteBatch batch) {
@@ -29,10 +30,10 @@ public class Bird {
 	public void update() {
 		if(Gdx.input.isKeyPressed(Input.Keys.SPACE) && position.y > 0) { // position.y > 0  - чтоб после поражения не работало нажатие на space
 			vy = 5; // при нажати на пробел птичка прыгает выше
-			fly_stepan.play();
+			fly.play();
 		}
 		else {
-			fly_stepan.stop();
+			fly.stop();
 		}
 		
 		vy += gravity;

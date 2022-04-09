@@ -14,6 +14,7 @@ public class Drop extends Game{ // главный класс
 	
 	@Override
 	public void create() {
+		Gdx.graphics.setVSync(true); // вертикальная синхронизация
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		this.setScreen(new Intro(this));// самый первый экран

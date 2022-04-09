@@ -29,6 +29,7 @@ public class ExitMenu implements Screen{
     boolean is_mouse_no = false, is_mouse_yes = false;
     Music music_fon;
 	public ExitMenu(Drop gam) {
+		Gdx.graphics.setVSync(true); // вертикальная синхронизация
 		this.game = gam;
 		back = new Texture("menu_exit.png");
 		arrow_left = new Texture("arrow_left.png");
@@ -104,7 +105,6 @@ public class ExitMenu implements Screen{
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		ScreenUtils.clear(1, 1, 1, 1); // create background color
-		//game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin(); // начало отрисовки
 		music_fon.play(); // здесь фоновая музыка запускается
 		game.batch.draw(back, -90, -60);

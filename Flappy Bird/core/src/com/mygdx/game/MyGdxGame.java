@@ -56,6 +56,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
     int random;
 	
 	public MyGdxGame (final Drop gam) {
+		Gdx.graphics.setVSync(true); // вертикальная синхронизация
 		this.game = gam;
 		batch = new SpriteBatch();
 		bg = new Background();

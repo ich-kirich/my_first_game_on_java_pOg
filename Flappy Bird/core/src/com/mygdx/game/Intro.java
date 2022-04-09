@@ -20,6 +20,7 @@ public class Intro implements Screen{
 	Texture intro_final;
 	
 	public Intro(final Drop gam) {
+		Gdx.graphics.setVSync(true); // вертикальная синхронизация
 		this.game = gam;
 		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("intro.gif").read()); // гифка
 		intro_final = new Texture("intro_final.png"); // для последнего кадра
