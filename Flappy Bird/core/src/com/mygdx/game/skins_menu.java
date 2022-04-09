@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -20,17 +21,17 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class skins_menu implements Screen{
 	final Drop game;
     private OrthographicCamera camera;
-    private Texture back, button_to_main_menu, line, skin_default, is_choose, skin_billy, skin_stepan;
-    private TextureRegion myTextureRegion, myTextureRegion1, myTextureRegion2, myTextureRegion3;
-    private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1, myTexRegionDrawable2, myTexRegionDrawable3;
-    protected ImageButton button, button1, button2, button3;
+    private Texture back, button_to_main_menu, line, skin_default, is_choose, skin_billy, skin_stepan, skin_shlepa, skin_sanitar;
+    private TextureRegion myTextureRegion, myTextureRegion1, myTextureRegion2, myTextureRegion3, myTextureRegion4, myTextureRegion5;
+    private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1, myTexRegionDrawable2, myTexRegionDrawable3, myTexRegionDrawable4, myTexRegionDrawable5;
+    protected ImageButton button, button1, button2, button3, button4, button5;
     protected Stage stage;
-    boolean is_mouse_back = false, is_mouse_skin_billy, skin_billy_is_choose = false, skin_stepan_is_choose = false, is_mouse_skin_stepan;
-	boolean skin_default_is_choose = false;
+    boolean is_mouse_back = false, is_mouse_skin_billy, skin_billy_is_choose = false, skin_stepan_is_choose = false, is_mouse_skin_stepan, is_mouse_skin_shlepa, skin_shlepa_is_choose = false;
+	boolean skin_default_is_choose = false, skin_sanitar_is_choose = false, is_mouse_skin_sanitar;
 	boolean is_mouse_skin_default;
 	static boolean is_choose_skin = false; // переменная выбора скина
 	Music music_fon;
-	Sound skin_default_sound, skin_billy_sound, skin_stepan_sound;
+	Sound skin_default_sound, skin_billy_sound, skin_stepan_sound, skin_shlepa_sound, skin_sanitar_sound;
 	
 	public skins_menu(Drop gam) {
 		Gdx.graphics.setVSync(true); // вертикальная синхронизация
@@ -39,10 +40,14 @@ public class skins_menu implements Screen{
 		back = new Texture("skins_menu_fon.png");
 		line = new Texture("back_to_menu_line.png");
 		is_choose = new Texture("skin_is_choose.png");
+		skin_shlepa = new Texture("skin_shlepa.png");
+		skin_sanitar = new Texture("skin_sanitar.png");
 		music_fon = Gdx.audio.newMusic(Gdx.files.internal("skins_menu_music.mp3")); // фоновая музыка
 		skin_default_sound = Gdx.audio.newSound(Gdx.files.internal("skin_default_sound.mp3"));
 		skin_billy_sound = Gdx.audio.newSound(Gdx.files.internal("skin_billy_sound.mp3"));
 		skin_stepan_sound = Gdx.audio.newSound(Gdx.files.internal("skin_stepan_sound.mp3"));
+		skin_shlepa_sound = Gdx.audio.newSound(Gdx.files.internal("skin_shlepa_sound.mp3"));
+		skin_sanitar_sound = Gdx.audio.newSound(Gdx.files.internal("skin_sanitar_sound.mp3"));
 		
 		button_to_main_menu = new Texture(Gdx.files.internal("back_to_menu.png"));
 	    myTextureRegion = new TextureRegion(button_to_main_menu);
@@ -69,7 +74,7 @@ public class skins_menu implements Screen{
             public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
             	is_mouse_back = false;
             } // если не наведен курсор
-        }); //  нажатие на кнопку YES
+        }); //  нажатие на кнопку В МЕНЮ
 		
 		skin_billy = new Texture(Gdx.files.internal("skin_billy.png"));
 		myTextureRegion1 = new TextureRegion(skin_billy);
@@ -90,6 +95,8 @@ public class skins_menu implements Screen{
             	skin_billy_is_choose = true;
             	skin_default_is_choose= false;
             	skin_stepan_is_choose = false;
+            	skin_shlepa_is_choose = false;
+            	skin_sanitar_is_choose = false;
                 return true;
             }
             public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
@@ -121,6 +128,8 @@ public class skins_menu implements Screen{
             	skin_default_is_choose = true;
             	skin_billy_is_choose = false;
             	skin_stepan_is_choose = false;
+            	skin_shlepa_is_choose = false;
+            	skin_sanitar_is_choose = false;
                 return true;
             }
             public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
@@ -152,6 +161,8 @@ public class skins_menu implements Screen{
             	skin_stepan_is_choose = true;
             	skin_default_is_choose = false;
             	skin_billy_is_choose = false;
+            	skin_shlepa_is_choose = false;
+            	skin_sanitar_is_choose = false;
                 return true;
             }
             public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
@@ -163,6 +174,72 @@ public class skins_menu implements Screen{
             	skin_stepan_sound.stop();
             } // если не наведен курсор
         }); //  Нажатие на скин степана
+		
+		skin_shlepa = new Texture(Gdx.files.internal("skin_shlepa.png"));
+		myTextureRegion4 = new TextureRegion(skin_shlepa);
+	    myTexRegionDrawable4 = new TextureRegionDrawable(myTextureRegion4);
+	    button4 = new ImageButton(myTexRegionDrawable4); //Set the button up
+	    button4.setPosition(300, 650);
+	    button4.setTransform(true);
+	    button4.setScale(7f);
+		stage.addActor(button4); // скин шлепы
+		
+	    Gdx.input.setInputProcessor(stage);
+		button4.addListener(new InputListener(){
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	Bird.img = new Texture("skin_shlepa.png");
+            	Bird.fly = Gdx.audio.newMusic(Gdx.files.internal("fly_shlepa.mp3")); // при полете звук
+            	is_choose_skin = true;
+            	skin_shlepa_is_choose = true;
+            	skin_billy_is_choose = false;
+            	skin_default_is_choose= false;
+            	skin_stepan_is_choose = false;
+            	skin_sanitar_is_choose = false;
+                return true;
+            }
+            public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
+            	is_mouse_skin_shlepa = true;
+            	skin_shlepa_sound.play();
+            } // если курсор наведен
+            public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
+            	is_mouse_skin_shlepa = false;
+            	skin_shlepa_sound.stop();
+            } // если не наведен курсор
+        }); //  Нажатие на скин шлепы
+		
+		skin_sanitar = new Texture(Gdx.files.internal("skin_sanitar.png"));
+		myTextureRegion5 = new TextureRegion(skin_sanitar);
+	    myTexRegionDrawable5 = new TextureRegionDrawable(myTextureRegion5);
+	    button5 = new ImageButton(myTexRegionDrawable5); //Set the button up
+	    button5.setPosition(1300, 650);
+	    button5.setTransform(true);
+	    button5.setScale(7f);
+		stage.addActor(button5); // скин шлепы
+		
+	    Gdx.input.setInputProcessor(stage);
+		button5.addListener(new InputListener(){
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	Bird.img = new Texture("skin_sanitar.png");
+            	Bird.fly = Gdx.audio.newMusic(Gdx.files.internal("fly_sanitar.mp3")); // при полете звук
+            	is_choose_skin = true;
+            	skin_sanitar_is_choose = true;
+            	skin_shlepa_is_choose = false;
+            	skin_billy_is_choose = false;
+            	skin_default_is_choose= false;
+            	skin_stepan_is_choose = false;
+                return true;
+            }
+            public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
+            	is_mouse_skin_sanitar = true;
+            	skin_sanitar_sound.play();
+            } // если курсор наведен
+            public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
+            	is_mouse_skin_sanitar = false;
+            	skin_sanitar_sound.stop();
+            } // если не наведен курсор
+        }); //  Нажатие на скин шлепы
 	}
 	
 	@Override
@@ -178,7 +255,7 @@ public class skins_menu implements Screen{
 		game.batch.begin(); // начало отрисовки
 		game.batch.draw(back, 0, 0);
 		music_fon.play();
-		music_fon.setVolume(0.5f);
+		music_fon.setVolume(0.3f);
 		if(is_mouse_back) {
 			game.batch.draw(line, 0, 464, 38, 1);
 		}
@@ -204,6 +281,26 @@ public class skins_menu implements Screen{
 			game.batch.draw(is_choose, 465, 220, 20, 20);
 		}
 		
+		if(is_mouse_skin_shlepa) {
+			game.batch.draw(line, 100, 280, 140, 1);
+		}
+		if(skin_shlepa_is_choose) {
+			game.batch.draw(is_choose, 150, 450, 20, 20);
+		}
+		
+		if(is_mouse_skin_sanitar) {
+			game.batch.draw(line, 425, 280, 140, 1);
+		}
+		if(skin_sanitar_is_choose) {
+			game.batch.draw(is_choose, 480, 450, 20, 20);
+		}
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			music_fon.stop();
+        	camera = new OrthographicCamera(1080, 600); // установка на hd (для последующего масштабирования)
+			game.setScreen(new MainMenuScreen(game));
+			dispose();
+		}// Выход в меню
 		game.batch.end();
 		stage.act(Gdx.graphics.getDeltaTime()); // отрисовка кнопок
 		stage.draw();
