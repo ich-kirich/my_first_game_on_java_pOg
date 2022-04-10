@@ -1,6 +1,9 @@
 package com.mygdx.game;
 
 import java.awt.Graphics;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -53,7 +56,8 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
     private Stage stage;
     private OrthographicCamera camera;
     Random random_choose_maingame = new Random(); // рандомное число
-    int random;
+    int random, score_to_file;
+    FileWriter file_results;
 	
 	public MyGdxGame (final Drop gam) {
 		Gdx.graphics.setVSync(true); // вертикальная синхронизация
@@ -89,6 +93,10 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		button.addListener(new InputListener(){
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	if((score / 16) > score_to_file) {
+    				score_to_file = (score / 16);
+    			}
+    			input_to_file();
             	gameOver = true;
     			in_menu = true;
     			music_fon1.stop(); // остановка фоновой музыки
@@ -259,11 +267,18 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		if(bird.position.y < 0 || bird.position.y > 580) {
 			gameOver = true;
 			score_itogo = score; // итоговый результат
+			if((score_itogo / 16) > score_to_file) {
+				score_to_file = (score / 16);
+			}
 		} // если вылетает за экран
 		if(Gdx.input.isKeyPressed(Input.Keys.W) && gameOver) {
 			recreate();
 		}// рестарт
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+			if((score / 16) > score_to_file) {
+				score_to_file = (score / 16);
+			}
+			input_to_file();
 			gameOver = true;
 			in_menu = true;
 			score = 0;
@@ -283,6 +298,28 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		}// Выход в меню
 	}
 	
+	public void input_to_file(){
+		System.out.print("score_to_file: " + score_to_file + " ");
+		if(statistics_menu.max_result_score < score_to_file) {
+			statistics_menu.max_result_score = score_to_file;
+			System.out.print("statistics_menu.max_result_score: " + statistics_menu.max_result_score + " ");		
+			try {
+				try {
+					file_results = new FileWriter("..//assets/results.txt", false);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} // запись в файл
+				System.out.print("Записал");	
+				file_results.write(statistics_menu.max_result_score);
+				file_results.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	} // запись в файл
+	
 	@Override
 	public void dispose () {
 		batch.dispose();
@@ -299,7 +336,6 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		random = random_choose_maingame.nextInt((7 - 1) + 1) + 1; // рандомное число
 		Background.new_fon = true; // чтоб с фоном не баговало
 		Background.promezh_fon = true; // чтоб с фоном не баговало
-
 	}
 
 	@Override

@@ -1,5 +1,9 @@
 package com.mygdx.game;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -18,12 +22,37 @@ public class Intro implements Screen{
 	float elapsed;
 	private float timeSeconds = 0f;
 	Texture intro_final;
-	
+    FileReader file_read;
+
 	public Intro(final Drop gam) {
 		Gdx.graphics.setVSync(true); // вертикальная синхронизация
 		this.game = gam;
 		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("intro.gif").read()); // гифка
 		intro_final = new Texture("intro_final.png"); // для последнего кадра
+		
+		try {
+			file_read = new FileReader("..//assets/results.txt");
+			int c;
+		    String temp = "";
+            try {
+				while((c=file_read.read())!=-1){
+				    temp += c;
+				}
+				if(temp == "") {
+					statistics_menu.max_result_score = 0;
+				}
+				else {
+					statistics_menu.max_result_score = Integer.parseInt(temp);
+				}
+				file_read.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
