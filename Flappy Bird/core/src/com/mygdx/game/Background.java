@@ -25,7 +25,7 @@ public class Background {
 	}
 	private int speed;
 	private BGPicture[] backs;
-	static boolean new_fon, promezh_fon = true;
+	static boolean new_fon = true, promezh_fon = true;
 	
 	public Background() {
 		speed = 4;
@@ -35,10 +35,10 @@ public class Background {
 	}
 	
 	public void render(SpriteBatch batch) {
-		for(int i = 0; i < backs.length; i++) {
-			batch.draw(backs[i].tx_1, backs[i].pos.x, backs[i].pos.y);
-		}
-		if((MyGdxGame.score / 16) >= 100) {
+		if(((MyGdxGame.score / 16) >= 100) && ((MyGdxGame.score / 16) < 300)) {
+			for(int i = 0; i < backs.length; i++) {
+				batch.draw(backs[i].tx_1, backs[i].pos.x, backs[i].pos.y);
+			}
 			if(backs[1].pos.x >= 890) {
 				promezh_fon = false;
 			}
@@ -54,9 +54,14 @@ public class Background {
 				}
 			}
 		}
-		if((MyGdxGame.score / 16) >= 300) {
-			promezh_fon = true;
-			new_fon = true;
+		if((MyGdxGame.score / 16) >= 300 && ((MyGdxGame.score / 16) < 500)) {
+			for(int i = 0; i < backs.length; i++) {
+				batch.draw(backs[i].tx_2, backs[i].pos.x, backs[i].pos.y);
+			}
+			if((MyGdxGame.score / 16) == 300) {
+				promezh_fon = true;
+				new_fon = true;
+			}
 			if(backs[1].pos.x >= 890) {
 				promezh_fon = false;
 			}
@@ -72,9 +77,14 @@ public class Background {
 				}
 			}
 		}
-		if((MyGdxGame.score / 16) >= 500) {
-			promezh_fon = true;
-			new_fon = true;
+		if((MyGdxGame.score / 16) >= 500 && ((MyGdxGame.score / 16) < 1000)) {
+			for(int i = 0; i < backs.length; i++) {
+				batch.draw(backs[i].tx_3, backs[i].pos.x, backs[i].pos.y);
+			}
+			if((MyGdxGame.score / 16) == 500) {
+				promezh_fon = true;
+				new_fon = true;
+			}
 			if(backs[1].pos.x >= 890) {
 				promezh_fon = false;
 			}
@@ -91,6 +101,13 @@ public class Background {
 			}
 		}
 		if((MyGdxGame.score / 16) >= 1000) {
+			for(int i = 0; i < backs.length; i++) {
+				batch.draw(backs[i].tx_4, backs[i].pos.x, backs[i].pos.y);
+			}
+			if((MyGdxGame.score / 16) == 1000) {
+				promezh_fon = true;
+				new_fon = true;
+			}
 			promezh_fon = true;
 			new_fon = true;
 			if(backs[1].pos.x >= 890) {

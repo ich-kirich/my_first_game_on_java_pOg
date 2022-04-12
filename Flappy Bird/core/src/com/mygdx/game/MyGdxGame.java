@@ -136,7 +136,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				music_fon1.play(); // здесь фоновая музыка запускается
 				isPlaying1 = music_fon1.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime(); // запуск таймера
-				if(timeSeconds > 575) {
+				if(timeSeconds > 212) {
 					music_fon1.stop();
 					isPlaying1 = false;
 				} // остановка песни
@@ -144,13 +144,12 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
 				}// выбор рандомной песни
-
 			}
 			else if(random == 2) {
 				music_fon2.play(); // здесь фоновая музыка запускается
 				isPlaying2 = music_fon2.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
-				if(timeSeconds > 548) {
+				if(timeSeconds > 184) {
 					music_fon2.stop();
 					isPlaying2 = false;
 				}
@@ -163,7 +162,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				music_fon3.play(); // здесь фоновая музыка запускается
 				isPlaying3 = music_fon3.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
-				if(timeSeconds > 747) {
+				if(timeSeconds > 263) {
 					music_fon3.stop();
 					isPlaying3 = false;
 				}
@@ -176,7 +175,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				music_fon4.play(); // здесь фоновая музыка запускается
 				isPlaying4 = music_fon4.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
-				if(timeSeconds > 600) {
+				if(timeSeconds > 236) {
 					music_fon4.stop();
 					isPlaying4 = false;
 				}
@@ -189,7 +188,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				music_fon5.play(); // здесь фоновая музыка запускается
 				isPlaying5 = music_fon5.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
-				if(timeSeconds > 415) {
+				if(timeSeconds > 171) {
 					music_fon5.stop();
 					isPlaying5 = false;
 				}
@@ -202,7 +201,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				music_fon6.play(); // здесь фоновая музыка запускается
 				isPlaying6 = music_fon6.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
-				if(timeSeconds > 365) {
+				if(timeSeconds > 124) {
 					music_fon6.stop();
 					isPlaying6 = false;
 				}
@@ -215,7 +214,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				music_fon7.play(); // здесь фоновая музыка запускается
 				isPlaying7 = music_fon7.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
-				if(timeSeconds > 385) {
+				if(timeSeconds > 138) {
 					music_fon7.stop();
 					isPlaying7 = false;
 				}
@@ -299,10 +298,10 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 	}
 	
 	public void input_to_file(){
-		System.out.print("score_to_file: " + score_to_file + " ");
+		String shifr;
 		if(statistics_menu.max_result_score < score_to_file) {
-			statistics_menu.max_result_score = score_to_file;
-			System.out.print("statistics_menu.max_result_score: " + statistics_menu.max_result_score + " ");		
+			statistics_menu.max_result_score = score_to_file;	
+			shifr = encryption();
 			try {
 				try {
 					file_results = new FileWriter("..//assets/results.txt", false);
@@ -310,8 +309,9 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} // запись в файл
-				System.out.print("Записал");	
-				file_results.write(statistics_menu.max_result_score);
+				System.out.print("Записал");
+				System.out.print(shifr);
+				file_results.write(shifr);
 				file_results.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -319,6 +319,44 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 			}
 		}
 	} // запись в файл
+	
+	public String encryption() {
+		String temp_shifr = "";
+		String temp = Integer.toString(statistics_menu.max_result_score);
+		for(int i = 0; i < temp.length(); i++) {
+			if(temp.charAt(i) == '0') {
+				temp_shifr += ")";
+			}
+			else if(temp.charAt(i) == '1') {
+				temp_shifr += "l";
+			}
+			else if(temp.charAt(i) == '2') {
+				temp_shifr += "b";
+			}
+			else if(temp.charAt(i) == '3') {
+				temp_shifr += "z";
+			}
+			else if(temp.charAt(i) == '4') {
+				temp_shifr += "v";
+			}
+			else if(temp.charAt(i) == '5') {
+				temp_shifr += "<";
+			}
+			else if(temp.charAt(i) == '6') {
+				temp_shifr += "[";
+			}
+			else if(temp.charAt(i) == '7') {
+				temp_shifr += "$";
+			}
+			else if(temp.charAt(i) == '8') {
+				temp_shifr += "!";
+			}
+			else if(temp.charAt(i) == '9') {
+				temp_shifr += "j";
+			}
+		}
+		return temp_shifr;
+	} // шифрование цифр
 	
 	@Override
 	public void dispose () {

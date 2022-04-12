@@ -33,16 +33,18 @@ public class Intro implements Screen{
 		try {
 			file_read = new FileReader("..//assets/results.txt");
 			int c;
-		    String temp = "";
+		    String temp = "", deshifr, temp_temp;
             try {
 				while((c=file_read.read())!=-1){
-				    temp += c;
+				    temp += (char)c;
 				}
 				if(temp == "") {
 					statistics_menu.max_result_score = 0;
 				}
 				else {
-					statistics_menu.max_result_score = Integer.parseInt(temp);
+					temp_temp = temp;
+					deshifr = decryption(temp_temp);
+					statistics_menu.max_result_score = Integer.parseInt(deshifr);
 				}
 				file_read.close();
 			} catch (IOException e) {
@@ -53,6 +55,42 @@ public class Intro implements Screen{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public String decryption(String temp) {
+		String temp_deshifr = "";
+		for(int i = 0; i < temp.length(); i++) {
+			if(temp.charAt(i) == ')') {
+				temp_deshifr += "0";
+			}
+			else if(temp.charAt(i) == 'l') {
+				temp_deshifr += "1";
+			}
+			else if(temp.charAt(i) == 'b') {
+				temp_deshifr += "2";
+			}
+			else if(temp.charAt(i) == 'z') {
+				temp_deshifr += "3";
+			}
+			else if(temp.charAt(i) == 'v') {
+				temp_deshifr += "4";
+			}
+			else if(temp.charAt(i) == '<') {
+				temp_deshifr += "5";
+			}
+			else if(temp.charAt(i) == '[') {
+				temp_deshifr += "6";
+			}
+			else if(temp.charAt(i) == '$') {
+				temp_deshifr += "7";
+			}
+			else if(temp.charAt(i) == '!') {
+				temp_deshifr += "8";
+			}
+			else if(temp.charAt(i) == 'j') {
+				temp_deshifr += "9";
+			}
+		}
+		return temp_deshifr;
 	}
 	
 	@Override
