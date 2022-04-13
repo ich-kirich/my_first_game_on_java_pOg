@@ -35,15 +35,15 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 	Background bg;
 	Bird bird; // птичка
 	Obstacles obstacles;
-	boolean gameOver;
+	static boolean gameOver;
 	Texture restartTexture, to_menu;
 	BitmapFont Font_score;
 	BitmapFont Font_score_final;
 	static int score;
 	static int score_itogo;
 	boolean is_bird = true; // если птица отрисована
-	Animation<TextureRegion> animation; // гифка
-	float elapsed;
+	Animation<TextureRegion> animation, animation_die; // гифка
+	float elapsed, elapsed_anim_bird, x_pos, y_pos;
 	final Drop game;
 	Music music_fon1, music_fon2, music_fon3, music_fon4, music_fon5, music_fon6, music_fon7, music_game_over; // сами песенки
 	boolean isPlaying1, isPlaying2, isPlaying3, isPlaying4, isPlaying5, isPlaying6, isPlaying7; // проверка воспроизводится ли музыка
@@ -71,6 +71,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		Font_score = new BitmapFont();
 		Font_score_final = new BitmapFont();
 		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("W.gif").read()); // GIF
+		animation_die = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("die_animation1.gif").read()); // гифка смерти птички
 		random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 		
 		music_fon1 = Gdx.audio.newMusic(Gdx.files.internal("music_fon1.mp3")); // фоновая музыка
@@ -226,13 +227,20 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 			 
 		} // пока не проиграли
 		else {
+			if(is_bird) {
+				y_pos = bird.position.y;
+				x_pos = 100;
+			}
+			is_bird = false;
+			x_pos -= 4;
+			elapsed_anim_bird += Gdx.graphics.getDeltaTime(); 
+			batch.draw(animation_die.getKeyFrame(elapsed), x_pos,  y_pos); // гифка
 			bird.position.y = -100; // перемещание птицы за экран, чтоб при поражении нажатие на space не работало
 			batch.draw(restartTexture, 320, 190);
 			Font_score_final.getData().setScale(3, 2); // размер шрифта
 			Font_score_final.draw(batch, "FINAL RESULT:" + (score_itogo / 16), 350, 420); // вывод итогового результата
 			elapsed += Gdx.graphics.getDeltaTime();
 		    batch.draw(animation.getKeyFrame(elapsed), 320, 90); // гифка 
-			is_bird = false;
 			if(gameOver && !in_menu) {
 				music_game_over.play();
 			}

@@ -4,15 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bird {
 	static Texture img;
 	static Vector2 position;
 	float vy;
-	float gravity;
+	float gravity, elapsed_anim_fly;
 	static Music fly;
+	Animation<TextureRegion> animation_fly;
 	public Bird() {
 		if(!skins_menu.is_choose_skin) {
 			img = new Texture("skin_default.png");
@@ -21,9 +24,14 @@ public class Bird {
 		position = new Vector2(100, 380);
 		vy = 0;
 		gravity = -0.7f; // гравитация
+		animation_fly = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("fly_anim1.gif").read()); // гифка смерти птички
 	}
 	
 	public void render(SpriteBatch batch) {
+		if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+			elapsed_anim_fly += Gdx.graphics.getDeltaTime(); 
+			batch.draw(animation_fly.getKeyFrame(elapsed_anim_fly), position.x - 20,  position.y - 15); // гифка
+		}
 		batch.draw(img, position.x, position.y);
 	}
 	

@@ -35,7 +35,12 @@ public class Background {
 	}
 	
 	public void render(SpriteBatch batch) {
-		if(((MyGdxGame.score / 16) >= 100) && ((MyGdxGame.score / 16) < 300)) {
+		if((MyGdxGame.score / 16) < 100) {
+			for(int i = 0; i < backs.length; i++) {
+				batch.draw(backs[i].tx_1, backs[i].pos.x, backs[i].pos.y);
+			}
+		}
+		else if(((MyGdxGame.score / 16) >= 100) && ((MyGdxGame.score / 16) < 300)) {
 			for(int i = 0; i < backs.length; i++) {
 				batch.draw(backs[i].tx_1, backs[i].pos.x, backs[i].pos.y);
 			}
@@ -54,7 +59,7 @@ public class Background {
 				}
 			}
 		}
-		if((MyGdxGame.score / 16) >= 300 && ((MyGdxGame.score / 16) < 500)) {
+		else if((MyGdxGame.score / 16) >= 300 && ((MyGdxGame.score / 16) < 500)) {
 			for(int i = 0; i < backs.length; i++) {
 				batch.draw(backs[i].tx_2, backs[i].pos.x, backs[i].pos.y);
 			}
@@ -77,7 +82,7 @@ public class Background {
 				}
 			}
 		}
-		if((MyGdxGame.score / 16) >= 500 && ((MyGdxGame.score / 16) < 1000)) {
+		else if((MyGdxGame.score / 16) >= 500 && ((MyGdxGame.score / 16) < 1000)) {
 			for(int i = 0; i < backs.length; i++) {
 				batch.draw(backs[i].tx_3, backs[i].pos.x, backs[i].pos.y);
 			}
@@ -100,7 +105,7 @@ public class Background {
 				}
 			}
 		}
-		if((MyGdxGame.score / 16) >= 1000) {
+		else if((MyGdxGame.score / 16) >= 1000) {
 			for(int i = 0; i < backs.length; i++) {
 				batch.draw(backs[i].tx_4, backs[i].pos.x, backs[i].pos.y);
 			}
