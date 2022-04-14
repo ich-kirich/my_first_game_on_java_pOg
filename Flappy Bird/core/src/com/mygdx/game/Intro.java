@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Intro implements Screen{
 
 	final Drop game;
-	OrthographicCamera camera;
 	Animation<TextureRegion> animation; // гифка
 	float elapsed;
 	private float timeSeconds = 0f;

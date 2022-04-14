@@ -32,12 +32,12 @@ public class MainMenuScreen implements Screen{
 	private Texture arrow_left, arrow_right;
 	Music music_intro_fon, music_intro_fon2;
 	int random_choose_menu = (int)(Math.random() * ((2 - 1) + 1)) + 1; // рандомное число
-    private Texture myTexture, myTexture1, myTexture2, button_statistics;
-    private TextureRegion myTextureRegion, myTextureRegion1, myTextureRegion2, myTextureRegion3;
-    private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1, myTexRegionDrawable2, myTexRegionDrawable3;
-    protected ImageButton button, button1, button_to_skins, button_to_statistics;
+    private Texture myTexture, myTexture1, myTexture2, button_statistics, button_tutorial;
+    private TextureRegion myTextureRegion, myTextureRegion1, myTextureRegion2, myTextureRegion3, myTextureRegion4;
+    private TextureRegionDrawable myTexRegionDrawable, myTexRegionDrawable1, myTexRegionDrawable2, myTexRegionDrawable3, myTexRegionDrawable4;
+    protected ImageButton button, button1, button_to_skins, button_to_statistics, button_to_tutorial;
     protected Stage stage;
-    private boolean is_mouse_play = false, is_mouse_exit = false, is_mouse_skins = false, is_mouse_statistics = false;
+    private boolean is_mouse_play = false, is_mouse_exit = false, is_mouse_skins = false, is_mouse_statistics = false, is_mouse_tutorial = false;
 	
 	public MainMenuScreen(Drop gam) {
 		Gdx.graphics.setVSync(true); // вертикальная синхронизация
@@ -61,7 +61,7 @@ public class MainMenuScreen implements Screen{
 		myTextureRegion1 = new TextureRegion(myTexture1);
 	    myTexRegionDrawable1 = new TextureRegionDrawable(myTextureRegion1);
 		button1 = new ImageButton(myTexRegionDrawable1);
-		button1.setPosition(400, 105);
+		button1.setPosition(400, 53);
 		stage.addActor(button1); // // кнопка exit
 		
 		myTexture2 = new Texture(Gdx.files.internal("button_to_skins_menu.png"));
@@ -79,6 +79,13 @@ public class MainMenuScreen implements Screen{
 	    button_to_statistics.setTransform(true);
 	    button_to_statistics.setScaleY(1.2f);;
 		stage.addActor(button_to_statistics); // кнопка statistics
+		
+		button_tutorial = new Texture(Gdx.files.internal("button_tutorial.png"));
+	    myTextureRegion4 = new TextureRegion(button_tutorial);
+	    myTexRegionDrawable4 = new TextureRegionDrawable(myTextureRegion4);
+	    button_to_tutorial = new ImageButton(myTexRegionDrawable4); //Set the button up
+	    button_to_tutorial.setPosition(400, 105);
+		stage.addActor(button_to_tutorial); // кнопка tutorial
 		
 		Gdx.input.setInputProcessor(stage); // начало принятие нажатия на кнопки
 		button.addListener(new InputListener(){
@@ -165,6 +172,27 @@ public class MainMenuScreen implements Screen{
             } // если не наведен курсор
             
         }); //  нажатие на кнопку statistics
+	    
+		Gdx.input.setInputProcessor(stage); // начало принятие нажатия на кнопки
+		button_to_tutorial.addListener(new InputListener(){
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            	music_intro_fon.stop(); // прекращение проигрывания фоновой музыки
+    			music_intro_fon2.stop(); // прекращение проигрывания фоновой музыки
+    			game.setScreen(new Tutorial(game));
+    			dispose();
+                return true;
+            }
+            
+            public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
+            	is_mouse_tutorial = true;
+            } // если курсор наведен
+            
+            public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
+            	is_mouse_tutorial = false;
+            } // если не наведен курсор
+            
+        }); //  нажатие на кнопку tutorial
 	}
 	
 
@@ -182,8 +210,8 @@ public class MainMenuScreen implements Screen{
 		game.batch.draw(bg_menu, 0, -100);
 		
 		if(is_mouse_exit) {
-			game.batch.draw(arrow_right, 170, 45, 10, 12);
-			game.batch.draw(arrow_left, 118, 45, 10, 12);
+			game.batch.draw(arrow_right, 170, 25, 10, 12);
+			game.batch.draw(arrow_left, 118, 25, 10, 12);
 		}// если курсор наведен на кнопку exit
 		if(is_mouse_play) {
 			game.batch.draw(arrow_right, 170, 119, 10, 12);
@@ -197,6 +225,10 @@ public class MainMenuScreen implements Screen{
 			game.batch.draw(arrow_right, 170, 70, 10, 12);
 			game.batch.draw(arrow_left, 118, 70, 10, 12);
 		} // если курсор наведен на кнопку statistics
+		if(is_mouse_tutorial) {
+			game.batch.draw(arrow_right, 170, 45, 10, 12);
+			game.batch.draw(arrow_left, 118, 45, 10, 12);
+		} // если курсор наведен на кнопку tutorial
 		
 		switch(random_choose_menu) {
 		case 1:

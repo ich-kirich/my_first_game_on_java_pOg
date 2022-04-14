@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 
 public class Bird {
 	static Texture img;
-	static Vector2 position;
+	static Vector3 position;
 	float vy;
 	float gravity, elapsed_anim_fly;
 	static Music fly;
@@ -21,7 +22,7 @@ public class Bird {
 			img = new Texture("skin_default.png");
 			fly = Gdx.audio.newMusic(Gdx.files.internal("fly_default.mp3")); // при полете звук
 		} // если скин не выбран
-		position = new Vector2(100, 380);
+		position = new Vector3(100, 380, 430);
 		vy = 0;
 		gravity = -0.7f; // гравитация
 		animation_fly = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("fly_anim1.gif").read()); // гифка смерти птички
@@ -46,10 +47,11 @@ public class Bird {
 		
 		vy += gravity;
 		position.y += vy;
+		position.z += vy;
 	}
 	
 	public void recreate() {
-		position = new Vector2(100, 380);
+		position = new Vector3(100, 380, 430);
 		vy = 0;
 	}
 }

@@ -265,7 +265,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		for(int i = 0; i < Obstacles.obs.length; i++) {
 			if(bird.position.x > Obstacles.obs[i].position.x && bird.position.x < Obstacles.obs[i].position.x + 50 && is_bird == true) { // чтоб считало очки пока птица отрисована
 				score += 1; // подсчет очков
-				if(!Obstacles.obs[i].emptySpace.contains(bird.position)) {
+				if(!Obstacles.obs[i].emptySpace.contains(bird.position.x, bird.position.y) || !Obstacles.obs[i].emptySpace.contains(bird.position.x, bird.position.y + 50) ) { // верхняя и нижняя граница птички
 					gameOver = true;
 					score_itogo = score; // итоговый результат
 				}
