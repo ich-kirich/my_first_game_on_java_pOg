@@ -24,10 +24,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Tutorial implements Screen{
 	final Drop game;
-	Animation<TextureRegion> animation_tutorial; // гифка
-	float elapsed;
 	private OrthographicCamera camera;
-    private Texture button_to_main_menu, line;
+    private Texture button_to_main_menu, line, fon;
     private Music music_fon;
     private TextureRegion myTextureRegion;
     private TextureRegionDrawable myTexRegionDrawable;
@@ -38,9 +36,9 @@ public class Tutorial implements Screen{
 	public Tutorial(final Drop gam) {
 		Gdx.graphics.setVSync(true); // вертикальная синхронизация
 		this.game = gam;
-		animation_tutorial = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("tutorial.gif").read()); // гифка
 		camera = new OrthographicCamera(1920, 1080); // установка на hd (для последующего масштабирования)
 		line = new Texture("back_to_menu_line.png");
+		fon = new Texture("tutorial_fon.png");
 		music_fon = Gdx.audio.newMusic(Gdx.files.internal("tutorial_music_fon.mp3")); // фоновая музыка
 		
 		button_to_main_menu = new Texture(Gdx.files.internal("back_to_menu.png"));
@@ -83,8 +81,7 @@ public class Tutorial implements Screen{
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		ScreenUtils.clear(1, 1, 1, 1); // create background color
 		game.batch.begin(); // начало отрисовки
-		elapsed += Gdx.graphics.getDeltaTime();
-		game.batch.draw(animation_tutorial.getKeyFrame(elapsed), 0, 0, 670, 500); // гифка
+		game.batch.draw(fon, 0, 0, 650, 490); // гифка
 		if(is_mouse_back) {
 			game.batch.draw(line, 0, 464, 38, 1);
 		}
