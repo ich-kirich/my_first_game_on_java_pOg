@@ -7,8 +7,6 @@ import java.io.IOException;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,17 +15,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Intro implements Screen{
 
 	final Drop game;
-	Animation<TextureRegion> animation; // гифка
+	Animation<TextureRegion> animation; // gif
 	float elapsed;
 	private float timeSeconds = 0f;
 	Texture intro_final;
     FileReader file_read;
 
 	public Intro(final Drop gam) {
-		Gdx.graphics.setVSync(true); // вертикальная синхронизация
+		Gdx.graphics.setVSync(true); // vertical sync
 		this.game = gam;
-		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("intro.gif").read()); // гифка
-		intro_final = new Texture("intro_final.png"); // для последнего кадра
+		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("intro.gif").read()); // gif
+		intro_final = new Texture("intro_final.png"); // for last frame
 		
 		try {
 			file_read = new FileReader("..//assets/results.txt");
@@ -102,14 +100,14 @@ public class Intro implements Screen{
 	public void render(float delta) {
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		ScreenUtils.clear(1, 1, 1, 1); // create background color
-		game.batch.begin(); // начало отрисовки
+		game.batch.begin(); // start drawing
 		elapsed += Gdx.graphics.getDeltaTime() + 0.01;
-		timeSeconds +=Gdx.graphics.getRawDeltaTime(); // для того, чтобы гифка один раз проиграла(идет счет секунд)
-		if(timeSeconds <= 6) { // ровно 6 секунд для одного проигрыша гифки
-			game.batch.draw(animation.getKeyFrame(elapsed), -75, -50); // гифка
+		timeSeconds +=Gdx.graphics.getRawDeltaTime(); // in order for the GIF to play once (seconds are counting)
+		if(timeSeconds <= 6) { // exactly 6 seconds for one GIF
+			game.batch.draw(animation.getKeyFrame(elapsed), -75, -50); // gif
 			}
 		else {
-			game.batch.draw(intro_final, -75, -50); // последний кадр, который бесконечно будет висеть
+			game.batch.draw(intro_final, -75, -50); // last frame to be drawn indefinitely
 		}
 		game.batch.end();
 		if(Gdx.input.isKeyPressed(Input.Keys.F)) {

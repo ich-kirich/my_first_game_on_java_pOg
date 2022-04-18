@@ -1,14 +1,8 @@
 package com.mygdx.game;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -18,7 +12,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Path;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -44,11 +37,11 @@ public class statistics_menu implements Screen{
 	BitmapFont Font_score_result;
     
     public statistics_menu(Drop gam) {
-		Gdx.graphics.setVSync(true); // вертикальная синхронизация
+		Gdx.graphics.setVSync(true); // vertical sync
 		this.game = gam;
-		camera = new OrthographicCamera(1920, 1080); // установка на hd (для последующего масштабирования)
+		camera = new OrthographicCamera(1920, 1080); // setting to hd (for later scaling)
 		fon = new Texture("statistics_menu_fon.png");
-		music_fon = Gdx.audio.newMusic(Gdx.files.internal("statistics_menu_music.mp3")); // фоновая музыка
+		music_fon = Gdx.audio.newMusic(Gdx.files.internal("statistics_menu_music.mp3")); // background music
 		line = new Texture("back_to_menu_line.png");
 		max_result_text = new Texture("max_result_text.png");
 		Font_score_result = new BitmapFont();
@@ -85,26 +78,26 @@ public class statistics_menu implements Screen{
 	    button = new ImageButton(myTexRegionDrawable); //Set the button up
 	    button.setPosition(10, 1050);
 	    stage = new Stage(new ScreenViewport());
-		stage.addActor(button); // кнопка В МЕНЮ
+		stage.addActor(button); // button to menu
 		
 	    Gdx.input.setInputProcessor(stage);
 		button.addListener(new InputListener(){
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             	music_fon.stop();
-            	camera = new OrthographicCamera(1080, 600); // установка на hd (для последующего масштабирования)
+            	camera = new OrthographicCamera(1080, 600); // setting to hd (for later scaling)
     			game.setScreen(new MainMenuScreen(game));
     			dispose();
                 return true;
             }
             public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
             	is_mouse_back = true;
-            } // если курсор наведен
+            } // if the cursor is hovered
             
             public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
             	is_mouse_back = false;
-            } // если не наведен курсор
-        }); //  нажатие на кнопку В МЕНЮ
+            } // if the cursor isn't hovered
+        }); //  pressing the button to menu
 		}
     
     public String decryption(String temp) {
@@ -142,7 +135,7 @@ public class statistics_menu implements Screen{
 			}
 		}
 		return temp_deshifr;
-	} // дешифровка
+	} // decryption
     
 	@Override
 	public void show() {
@@ -154,11 +147,11 @@ public class statistics_menu implements Screen{
 	public void render(float delta) {
 		// TODO Auto-generated method stub
 		ScreenUtils.clear(1, 1, 1, 1); // create background color
-		game.batch.begin(); // начало отрисовки
+		game.batch.begin(); // start drawing
 		game.batch.draw(fon, 0, 0);
 		Font_score_result.setColor(Color.WHITE);
-		Font_score_result.getData().setScale(3, 2); // размер шрифта
-		Font_score_result.draw(game.batch, "" + max_result_score, 530, 225); // вывод итогового результата
+		Font_score_result.getData().setScale(3, 2); // font size
+		Font_score_result.draw(game.batch, "" + max_result_score, 530, 225); // display final resalt
 		game.batch.draw(max_result_text, 20, 200, 500, 50);
 		if(is_mouse_back) {
 			game.batch.draw(line, 0, 464, 38, 1);
@@ -166,19 +159,19 @@ public class statistics_menu implements Screen{
 		music_fon.play();
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 			music_fon.stop();
-        	camera = new OrthographicCamera(1080, 600); // установка на hd (для последующего масштабирования)
+        	camera = new OrthographicCamera(1080, 600); // setting to hd (for later scaling)
 			game.setScreen(new MainMenuScreen(game));
 			dispose();
-		}// Выход в меню
+		}// Exit to the menu
 		game.batch.end();
-		stage.act(Gdx.graphics.getDeltaTime()); // отрисовка кнопок
+		stage.act(Gdx.graphics.getDeltaTime()); // button rendering
 		stage.draw();
 	}
 
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
-		camera.setToOrtho(false, 1080, 600); // масштабирование экрана
+		camera.setToOrtho(false, 1080, 600); // screen scaling
 	}
 
 	@Override

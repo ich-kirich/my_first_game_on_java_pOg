@@ -1,16 +1,10 @@
 package com.mygdx.game;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -24,7 +18,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Tutorial implements Screen{
 	final Drop game;
-	private OrthographicCamera camera;
     private Texture button_to_main_menu, line, fon;
     private Music music_fon;
     private TextureRegion myTextureRegion;
@@ -34,12 +27,11 @@ public class Tutorial implements Screen{
     boolean is_mouse_back = false;
     
 	public Tutorial(final Drop gam) {
-		Gdx.graphics.setVSync(true); // вертикальная синхронизация
+		Gdx.graphics.setVSync(true); // vertical sync
 		this.game = gam;
-		camera = new OrthographicCamera(1920, 1080); // установка на hd (для последующего масштабирования)
 		line = new Texture("back_to_menu_line.png");
 		fon = new Texture("tutorial_fon.png");
-		music_fon = Gdx.audio.newMusic(Gdx.files.internal("tutorial_music_fon.mp3")); // фоновая музыка
+		music_fon = Gdx.audio.newMusic(Gdx.files.internal("tutorial_music_fon.mp3")); // background music
 		
 		button_to_main_menu = new Texture(Gdx.files.internal("back_to_menu.png"));
 	    myTextureRegion = new TextureRegion(button_to_main_menu);
@@ -47,26 +39,25 @@ public class Tutorial implements Screen{
 	    button = new ImageButton(myTexRegionDrawable); //Set the button up
 	    button.setPosition(10, 1050);
 	    stage = new Stage(new ScreenViewport());
-		stage.addActor(button); // кнопка В МЕНЮ
+		stage.addActor(button); // button to menu
 		
 	    Gdx.input.setInputProcessor(stage);
 		button.addListener(new InputListener(){
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
             	music_fon.stop();
-            	camera = new OrthographicCamera(1080, 600); // установка на hd (для последующего масштабирования)
     			game.setScreen(new MainMenuScreen(game));
     			dispose();
                 return true;
             }
             public void enter(InputEvent event, float x, float y, int pointer,  @Null Actor fromActor) {
             	is_mouse_back = true;
-            } // если курсор наведен
+            } // if the cursor is hovered
             
             public void exit(InputEvent event, float x, float y, int pointer, @Null Actor toActor) {
             	is_mouse_back = false;
-            } // если не наведен курсор
-        }); //  нажатие на кнопку В МЕНЮ
+            } // if the cursor isn't hovered
+        }); // pressing the button to menu
 	}
 
 	@Override
@@ -80,8 +71,8 @@ public class Tutorial implements Screen{
 		// TODO Auto-generated method stub
 		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 		ScreenUtils.clear(1, 1, 1, 1); // create background color
-		game.batch.begin(); // начало отрисовки
-		game.batch.draw(fon, 0, 0, 650, 490); // гифка
+		game.batch.begin(); // start drawing
+		game.batch.draw(fon, 0, 0, 650, 490); // gif
 		if(is_mouse_back) {
 			game.batch.draw(line, 0, 464, 38, 1);
 		}
@@ -92,7 +83,7 @@ public class Tutorial implements Screen{
 			dispose();
 		}
 		game.batch.end();
-		stage.act(Gdx.graphics.getDeltaTime()); // отрисовка кнопок
+		stage.act(Gdx.graphics.getDeltaTime()); // button rendering
 		stage.draw();
 	}
 

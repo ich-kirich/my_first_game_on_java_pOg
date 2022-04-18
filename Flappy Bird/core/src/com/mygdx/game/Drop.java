@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class Drop extends Game{ // главный класс
+public class Drop extends Game{ // main class for set screen
 	
 	SpriteBatch batch;
 	BitmapFont font;
@@ -14,10 +14,10 @@ public class Drop extends Game{ // главный класс
 	
 	@Override
 	public void create() {
-		Gdx.graphics.setVSync(true); // вертикальная синхронизация
+		Gdx.graphics.setVSync(true); // vertical sync
 		batch = new SpriteBatch();
 		font = new BitmapFont();
-		this.setScreen(new Intro(this));// самый первый экран
+		this.setScreen(new Intro(this));// first screen
 	}
 	
 	@Override

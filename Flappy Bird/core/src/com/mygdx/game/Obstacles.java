@@ -17,7 +17,7 @@ public class Obstacles {
 			position = pos;
 			speed = 3;
 			offset = new Random().nextInt(250);
-			emptySpace = new Rectangle(position.x, position.y - offset + 300, 50, betweenDistance); // рестарт картинка
+			emptySpace = new Rectangle(position.x, position.y - offset + 300, 50, betweenDistance); // restart pictures
 		}
 		
 		public void update() {

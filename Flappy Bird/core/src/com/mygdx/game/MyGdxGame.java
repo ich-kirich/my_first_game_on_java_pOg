@@ -1,31 +1,25 @@
 package com.mygdx.game;
 
-import java.awt.Graphics;
-import java.io.BufferedWriter;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -33,7 +27,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class MyGdxGame extends ApplicationAdapter implements Screen{
 	SpriteBatch batch;
 	Background bg;
-	Bird bird; // птичка
+	Bird bird; // bird
 	Obstacles obstacles;
 	static boolean gameOver;
 	Texture restartTexture, to_menu;
@@ -41,26 +35,26 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 	BitmapFont Font_score_final;
 	static int score;
 	static int score_itogo;
-	boolean is_bird = true; // если птица отрисована
-	Animation<TextureRegion> animation, animation_die; // гифка
+	boolean is_bird = true; // if the bird is rendered
+	Animation<TextureRegion> animation, animation_die; // gif
 	float elapsed, elapsed_anim_bird, x_pos, y_pos;
 	final Drop game;
-	Music music_fon1, music_fon2, music_fon3, music_fon4, music_fon5, music_fon6, music_fon7, music_game_over; // сами песенки
-	boolean isPlaying1, isPlaying2, isPlaying3, isPlaying4, isPlaying5, isPlaying6, isPlaying7; // проверка воспроизводится ли музыка
-	private float timeSeconds = 0f; // таймер, чтоб проигрывало ровно один раз музыку и меняло на другую
-	boolean in_menu = false; // если произошел переход в меню
+	Music music_fon1, music_fon2, music_fon3, music_fon4, music_fon5, music_fon6, music_fon7, music_game_over; // music
+	boolean isPlaying1, isPlaying2, isPlaying3, isPlaying4, isPlaying5, isPlaying6, isPlaying7; // check if music is playing
+	private float timeSeconds = 0f; // timer to play music exactly once and change to another
+	boolean in_menu = false; // if there is a transition to the menu
 	private Texture myTexture;
     private TextureRegion myTextureRegion;
     private TextureRegionDrawable myTexRegionDrawable;
     private ImageButton button;
     private Stage stage;
     private OrthographicCamera camera;
-    Random random_choose_maingame = new Random(); // рандомное число
+    Random random_choose_maingame = new Random(); // random number
     int random, score_to_file;
     FileWriter file_results;
 	
 	public MyGdxGame (final Drop gam) {
-		Gdx.graphics.setVSync(true); // вертикальная синхронизация
+		Gdx.graphics.setVSync(true); // vertical sync
 		this.game = gam;
 		batch = new SpriteBatch();
 		bg = new Background();
@@ -71,10 +65,10 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		Font_score = new BitmapFont();
 		Font_score_final = new BitmapFont();
 		animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("W.gif").read()); // GIF
-		animation_die = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("die_animation1.gif").read()); // гифка смерти птички
+		animation_die = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("die_animation1.gif").read()); // bird death GIF
 		random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 		
-		music_fon1 = Gdx.audio.newMusic(Gdx.files.internal("music_fon1.mp3")); // фоновая музыка
+		music_fon1 = Gdx.audio.newMusic(Gdx.files.internal("music_fon1.mp3")); // background music
 		music_fon2 = Gdx.audio.newMusic(Gdx.files.internal("music_fon2.mp3"));
 		music_fon3 = Gdx.audio.newMusic(Gdx.files.internal("music_fon3.mp3"));
 		music_fon4 = Gdx.audio.newMusic(Gdx.files.internal("music_fon4.mp3"));
@@ -83,7 +77,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		music_fon7 = Gdx.audio.newMusic(Gdx.files.internal("music_fon7.mp3"));
 		music_game_over = Gdx.audio.newMusic(Gdx.files.internal("music_game_over.mp3"));
 		
-		myTexture = new Texture(Gdx.files.internal("main_game_go_menu.png")); // создание кнопки выхода в меню
+		myTexture = new Texture(Gdx.files.internal("main_game_go_menu.png")); // creating a menu exit button
 	    myTextureRegion = new TextureRegion(myTexture);
 	    myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 	    button = new ImageButton(myTexRegionDrawable); //Set the button up
@@ -100,21 +94,21 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
     			input_to_file();
             	gameOver = true;
     			in_menu = true;
-    			music_fon1.stop(); // остановка фоновой музыки
-    			music_fon2.stop(); // остановка фоновой музыки
-    			music_fon3.stop(); // остановка фоновой музыки
-    			music_fon4.stop(); // остановка фоновой музыки
-    			music_fon5.stop(); // остановка фоновой музыки
-    			music_fon6.stop(); // остановка фоновой музыки
-    			music_fon7.stop(); // остановка фоновой музыки
-    			music_game_over.stop(); // остановка музыки game_over
+    			music_fon1.stop(); // stop background music
+    			music_fon2.stop(); // stop background music
+    			music_fon3.stop(); // stop background music
+    			music_fon4.stop(); // stop background music
+    			music_fon5.stop(); // stop background music
+    			music_fon6.stop(); // stop background music
+    			music_fon7.stop(); // stop background music
+    			music_game_over.stop(); // stop background music game_over
     			recreate();
     			game.setScreen(new MainMenuScreen(game));
                 return true;
             }
-        }); // нажатие на кнопку выхода в меню
+        }); // pressing the menu exit button
 		
-		camera = new OrthographicCamera(1920, 1080); // установка на hd (для последующего масштабирования)
+		camera = new OrthographicCamera(1920, 1080); // setting to hd (for later scaling)
 	}
 
 	@Override
@@ -123,31 +117,31 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		update();
 		ScreenUtils.clear(1, 1, 1 , 1); // create background color
 		batch.setProjectionMatrix(camera.combined);
-		batch.begin(); // начало отрисовки
-		bg.render(batch); // отрисовка картинки
+		batch.begin(); // start drawing
+		bg.render(batch); // drawing a picture
 		obstacles.render(batch);
 		Font_score.setColor(Color.WHITE);
 		Font_score_final.setColor(Color.WHITE);
 		
 		if(!gameOver) {
 			bird.render(batch);
-			Font_score.draw(batch, "SCORE:" + (score / 16), 10, 20); // вывод промежуточного
+			Font_score.draw(batch, "SCORE:" + (score / 16), 10, 20); // intermediate result output
 			
 			if(random == 1) {
-				music_fon1.play(); // здесь фоновая музыка запускается
+				music_fon1.play(); // here the background music starts
 				isPlaying1 = music_fon1.isPlaying();
-				timeSeconds +=Gdx.graphics.getRawDeltaTime(); // запуск таймера
+				timeSeconds +=Gdx.graphics.getRawDeltaTime(); // start timer
 				if(timeSeconds > 212) {
 					music_fon1.stop();
 					isPlaying1 = false;
-				} // остановка песни
+				} // music stop
 				if(!isPlaying1) {
 					random = random_choose_maingame.nextInt((7 - 1) + 1) + 1;
 					timeSeconds = 0;
-				}// выбор рандомной песни
+				}// random choose music
 			}
 			else if(random == 2) {
-				music_fon2.play(); // здесь фоновая музыка запускается
+				music_fon2.play(); // here the background music starts
 				isPlaying2 = music_fon2.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 184) {
@@ -160,7 +154,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random == 3) {
-				music_fon3.play(); // здесь фоновая музыка запускается
+				music_fon3.play(); // here the background music starts
 				isPlaying3 = music_fon3.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 263) {
@@ -173,7 +167,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random == 4) {
-				music_fon4.play(); // здесь фоновая музыка запускается
+				music_fon4.play(); // here the background music starts
 				isPlaying4 = music_fon4.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 236) {
@@ -186,7 +180,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random == 5) {
-				music_fon5.play(); // здесь фоновая музыка запускается
+				music_fon5.play(); // here the background music starts
 				isPlaying5 = music_fon5.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 171) {
@@ -199,7 +193,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random == 6) {
-				music_fon6.play(); // здесь фоновая музыка запускается
+				music_fon6.play(); // here the background music starts
 				isPlaying6 = music_fon6.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 124) {
@@ -212,7 +206,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			}
 			else if(random == 7) {
-				music_fon7.play(); // здесь фоновая музыка запускается
+				music_fon7.play(); // here the background music starts
 				isPlaying7 = music_fon7.isPlaying();
 				timeSeconds +=Gdx.graphics.getRawDeltaTime();
 				if(timeSeconds > 138) {
@@ -225,7 +219,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				}
 			} 
 			 
-		} // пока не проиграли
+		} // until you lose
 		else {
 			if(is_bird) {
 				y_pos = bird.position.y;
@@ -234,27 +228,27 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 			is_bird = false;
 			x_pos -= 4;
 			elapsed_anim_bird += Gdx.graphics.getDeltaTime(); 
-			batch.draw(animation_die.getKeyFrame(elapsed), x_pos,  y_pos); // гифка
-			bird.position.y = -100; // перемещание птицы за экран, чтоб при поражении нажатие на space не работало
+			batch.draw(animation_die.getKeyFrame(elapsed), x_pos,  y_pos); // gif
+			bird.position.y = -100; // moving the bird off the screen so that when hit pressing space does not work
 			batch.draw(restartTexture, 320, 190);
-			Font_score_final.getData().setScale(3, 2); // размер шрифта
-			Font_score_final.draw(batch, "FINAL RESULT:" + (score_itogo / 16), 350, 420); // вывод итогового результата
+			Font_score_final.getData().setScale(3, 2); // font size
+			Font_score_final.draw(batch, "FINAL RESULT:" + (score_itogo / 16), 350, 420); // conclusion of the final result
 			elapsed += Gdx.graphics.getDeltaTime();
-		    batch.draw(animation.getKeyFrame(elapsed), 320, 90); // гифка 
+		    batch.draw(animation.getKeyFrame(elapsed), 320, 90); // gif 
 			if(gameOver && !in_menu) {
 				music_game_over.play();
 			}
-			music_fon1.stop(); // остановка фоновой музыки
-			music_fon2.stop(); // остановка фоновой музыки
-			music_fon3.stop(); // остановка фоновой музыки
-			music_fon4.stop(); // остановка фоновой музыки
-			music_fon5.stop(); // остановка фоновой музыки
-			music_fon6.stop(); // остановка фоновой музыки
-			music_fon7.stop(); // остановка фоновой музыки
-		} // в случае поражения
+			music_fon1.stop(); // stop background music
+			music_fon2.stop(); // stop background music
+			music_fon3.stop(); // stop background music
+			music_fon4.stop(); // stop background music
+			music_fon5.stop(); // stop background music
+			music_fon6.stop(); // stop background music
+			music_fon7.stop(); // stop background music
+		} // in case of defeat
 		batch.end();
 		
-		stage.act(Gdx.graphics.getDeltaTime()); // отрисовка кнопки
+		stage.act(Gdx.graphics.getDeltaTime()); // button rendering
         stage.draw();
 	}
 	
@@ -263,24 +257,24 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		obstacles.update();
 		bird.update();
 		for(int i = 0; i < Obstacles.obs.length; i++) {
-			if(bird.position.x > Obstacles.obs[i].position.x && bird.position.x < Obstacles.obs[i].position.x + 50 && is_bird == true) { // чтоб считало очки пока птица отрисована
-				score += 1; // подсчет очков
-				if(!Obstacles.obs[i].emptySpace.contains(bird.position.x, bird.position.y) || !Obstacles.obs[i].emptySpace.contains(bird.position.x, bird.position.y + 50) ) { // верхняя и нижняя граница птички
+			if(bird.position.x > Obstacles.obs[i].position.x && bird.position.x < Obstacles.obs[i].position.x + 50 && is_bird == true) { // to count points while the bird is drawn
+				score += 1; // scoring
+				if(!Obstacles.obs[i].emptySpace.contains(bird.position.x, bird.position.y) || !Obstacles.obs[i].emptySpace.contains(bird.position.x, bird.position.y + 50) ) { // upper and lower border of the bird
 					gameOver = true;
-					score_itogo = score; // итоговый результат
+					score_itogo = score; // final result
 				}
 			}
-		} // если врежется в трубу
+		} // if it hits a pipe
 		if(bird.position.y < 0 || bird.position.y > 580) {
 			gameOver = true;
-			score_itogo = score; // итоговый результат
+			score_itogo = score; // final result
 			if((score_itogo / 16) > score_to_file) {
 				score_to_file = (score / 16);
 			}
-		} // если вылетает за экран
+		} // if it goes off screen
 		if(Gdx.input.isKeyPressed(Input.Keys.W) && gameOver) {
 			recreate();
-		}// рестарт
+		}// restart
 		if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
 			if((score / 16) > score_to_file) {
 				score_to_file = (score / 16);
@@ -290,19 +284,19 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 			in_menu = true;
 			score = 0;
 			score_itogo = 0;
-			Background.new_fon = true; // чтоб с фоном не баговало
-			Background.promezh_fon = true; // чтоб с фоном не баговало
-			music_fon1.stop(); // остановка фоновой музыки
-			music_fon2.stop(); // остановка фоновой музыки
-			music_fon3.stop(); // остановка фоновой музыки
-			music_fon4.stop(); // остановка фоновой музыки
-			music_fon5.stop(); // остановка фоновой музыки
-			music_fon6.stop(); // остановка фоновой музыки
-			music_fon7.stop(); // остановка фоновой музыки
-			music_game_over.stop(); // остановка музыки game_over
+			Background.new_fon = true; // it is for background in Class Background
+			Background.promezh_fon = true; // it is for background in Class Background
+			music_fon1.stop(); // stop background music
+			music_fon2.stop(); // stop background music
+			music_fon3.stop(); // stop background music
+			music_fon4.stop(); // stop background music
+			music_fon5.stop(); // stop background music
+			music_fon6.stop(); // stop background music
+			music_fon7.stop(); // stop background music
+			music_game_over.stop(); // stop background music game_over
 			dispose();
 			game.setScreen(new MainMenuScreen(game));
-		}// Выход в меню
+		}// Exit to the menu
 	}
 	
 	public void input_to_file(){
@@ -316,9 +310,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} // запись в файл
-				System.out.print("Записал");
-				System.out.print(shifr);
+				} // writing to file
 				file_results.write(shifr);
 				file_results.close();
 			} catch (IOException e) {
@@ -326,7 +318,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 				e.printStackTrace();
 			}
 		}
-	} // запись в файл
+	} // writing to file
 	
 	public String encryption() {
 		String temp_shifr = "";
@@ -364,7 +356,7 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 			}
 		}
 		return temp_shifr;
-	} // шифрование цифр
+	} // digit encryption
 	
 	@Override
 	public void dispose () {
@@ -379,9 +371,9 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 		score_itogo = 0;
 		is_bird = true;
 		music_game_over.stop();
-		random = random_choose_maingame.nextInt((7 - 1) + 1) + 1; // рандомное число
-		Background.new_fon = true; // чтоб с фоном не баговало
-		Background.promezh_fon = true; // чтоб с фоном не баговало
+		random = random_choose_maingame.nextInt((7 - 1) + 1) + 1; //random number
+		Background.new_fon = true; // it is for background in Class Background
+		Background.promezh_fon = true; // it is for background in Class Background
 	}
 
 	@Override
@@ -397,6 +389,6 @@ public class MyGdxGame extends ApplicationAdapter implements Screen{
 	}
 	@Override
 	public void resize(int width, int height){
-		camera.setToOrtho(false, 1080, 600); // масштабироавние экрана
+		camera.setToOrtho(false, 1080, 600); // screen scaling
 	}
 }
